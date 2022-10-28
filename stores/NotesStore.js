@@ -10,7 +10,7 @@ export const useNotesStore = defineStore('notesStore', {
 
   actions: {
     async getNotes(username) {
-        this.notes = getNotes(username)
+        this.notes = await getNotes(username)
     },
 
     addNote(username, title, content) {

@@ -79,7 +79,7 @@ export function editNote(id, username, title, content) {
         })
 }
 
-export function register(username, password, name, address, age) {
+export async function register(username, password, name, address, age) {
     const requestBody = {
         username,
         password,
@@ -116,7 +116,7 @@ export async function logIn(username, password) {
     return response.status === 200
 }
 
-export function logOut(username) {
+export async function logOut(username) {
     fetch ('http://localhost:5173/auth/logout', {
         method: 'POST',
         headers: {

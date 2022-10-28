@@ -1,3 +1,14 @@
+<script setup>
+
+    defineProps({
+        id: Number,
+        title: String,
+        content: String,
+        date: String
+    })
+
+</script>
+
 <template>
     <div id="note" class="inline-block w-1/4 h-fit bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
         <div class="relative w-fit float-right">
@@ -13,12 +24,12 @@
         </div>
 
         <div class="block">
-            <h3 class=" py-4 break-words font-serif text-center text-gray-400">  title  </h3>
+            <h3 class=" py-4 break-words font-serif text-center text-gray-400">  {{ title }}  </h3>
             <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0">
-                date
+                {{ date }}
             </p>
             <p class="pb-8 break-words text-left text-gray-400 flex w-full"> 
-                content
+                {{ content }}
             </p>
         </div>
         
