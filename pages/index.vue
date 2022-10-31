@@ -1,6 +1,6 @@
 <script setup>
     definePageMeta({
-        middleware: 'redirectToNotes'
+        middleware: ['redirect-to-notes']
     })
 </script>
 

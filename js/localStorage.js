@@ -2,6 +2,10 @@ export function LSIsLogged() {
     return !!localStorage.getItem('logged')
 }
 
+export function LSGetLogged() {
+    return localStorage.getItem('logged')
+}
+
 export function LSSetLogged(username) {
     try {
         localStorage.setItem("logged", username)

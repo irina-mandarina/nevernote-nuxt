@@ -1,13 +1,13 @@
 <script setup>
     import { onMounted, ref } from 'vue'
-    import { useUserStore } from "~~/stores/UserStore"
+    import { useUserStore } from "~~/store/UserStore"
 
     const userStore = useUserStore()
     
-    let username = computed(() => userStore.username)
-    let name = computed(() => userStore.name)
-    let age = computed(() => userStore.age)
-    let address = computed(() => userStore.address)
+    const username = computed(() => userStore.username)
+    const name = computed(() => userStore.name)
+    const age = computed(() => userStore.age)
+    const address = computed(() => userStore.address)
     let bio = computed(() => userStore.bio)
     let newBio = ref(null)
 

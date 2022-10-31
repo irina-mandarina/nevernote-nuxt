@@ -1,12 +1,13 @@
 <script setup>
-    import { useNotesStore } from '~~/stores/NotesStore'
-    import { useUserStore } from '~~/stores/USerStore'
+    import { useNotesStore } from '~~/store/NotesStore'
+    import { useUserStore } from '~~/store/UserStore'
     
     const notesStore = useNotesStore()
     const userStore = useUserStore()
 
     onMounted(() => {
-        let username = computed(() => userStore.username)
+        let username = computed(() => userStore.username).value
+        console.log(username)
         notesStore.getNotes(username) // await??
         userStore.getUserDetails(username)
     })

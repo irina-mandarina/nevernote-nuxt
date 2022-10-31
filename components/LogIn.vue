@@ -1,10 +1,14 @@
 <script setup>
     import { ref } from 'vue'
-    import { useUserStore } from "~~/stores/UserStore"
+    import { useUserStore } from "~~/store/UserStore"
 
     const userStore = useUserStore()
     let username = ref(null)
     let password = ref(null)
+
+    async function logIn() {
+        await userStore.requestLogIn(username.value, password.value)
+    }
 </script>
 <template>
     <div class="w-full h-full fixed bg-gray-800 text-indigo-900 pattern-grid-lg">
@@ -30,7 +34,7 @@
             </div>
 
             <div class="mx-auto flex z-0 mt-12 mb-4">
-                <button @click="userStore.logIn(username, password)" class="mx-auto w-1/4 bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">
+                <button @click="logIn()" class="mx-auto w-1/4 bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">
                     Log in
                 </button>   
             </div>

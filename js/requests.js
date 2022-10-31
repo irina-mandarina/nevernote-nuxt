@@ -30,7 +30,7 @@ export function addNote(username, title, content) {
             username
         }
     })
-        .then((response) => response.text())
+        .then((response) => response.json())
         .then((data) => {
             console.log(data)
         })

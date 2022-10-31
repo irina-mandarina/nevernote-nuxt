@@ -20,10 +20,9 @@ export const useUserStore = defineStore('userStore', {
       await register(user.username, user.password, user.name, user.address, user.age)
       this.password = password
       this.logIn(username)
-      //this.logInStore(user.username, user.password)
     },
 
-    async requestlogIn(username, password) {
+    async requestLogIn(username, password) {
         const authorised = await logIn(username, password)
         if (authorised) {
           this.logIn(username)
@@ -31,15 +30,19 @@ export const useUserStore = defineStore('userStore', {
         else {
           console.log("Wrong password")
         }
+        this.logIn(username)
     },
 
     async logIn(username) {
+      console.log(username)
       this.username = username
       this.logged = true
       LSSetLogged(username)
+      navigateTo('/notes')
     },
 
     async getUserDetails(username) {
+      console.log(username)
       const details = await userDetails(username)
       try {
         if (details === null) {
