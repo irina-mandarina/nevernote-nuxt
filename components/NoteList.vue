@@ -7,7 +7,6 @@
 
     onMounted(() => {
         let username = computed(() => userStore.username).value
-        console.log(username)
         notesStore.getNotes(username) // await??
         userStore.getUserDetails(username)
     })

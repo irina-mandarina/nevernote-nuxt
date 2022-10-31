@@ -4,11 +4,11 @@
 
     const userStore = useUserStore()
     
-    const username = computed(() => userStore.username)
-    const name = computed(() => userStore.name)
-    const age = computed(() => userStore.age)
-    const address = computed(() => userStore.address)
-    let bio = computed(() => userStore.bio)
+    const username = computed(() => userStore.username).value
+    const name = computed(() => userStore.name).value
+    const age = computed(() => userStore.age).value
+    const address = computed(() => userStore.address).value
+    const bio = computed(() => userStore.bio).value
     let newBio = ref(null)
 
     onMounted(() => {
@@ -62,7 +62,7 @@
             <button @click="saveChanges()" id="savebiobtn" class="hidden my-4 mx-auto bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Save changes</button>
 
             
-            <button class="my-6 flex mx-auto mx-auto bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Log out</button>
+            <button @click="userStore.logOut(username)" class="my-6 flex mx-auto mx-auto bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Log out</button>
 
         </div>
         

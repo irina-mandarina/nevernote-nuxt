@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
                 return navigateTo('/notes') // and redirect to notes
             }
             else {
-                return navigateTo('/') // they are not logged anywhere so let them log in
+                return true// they are not logged anywhere so let them log in
             }
         }
         if (userStore.logged) { // logged in the store

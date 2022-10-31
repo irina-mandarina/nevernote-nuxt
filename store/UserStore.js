@@ -30,7 +30,6 @@ export const useUserStore = defineStore('userStore', {
         else {
           console.log("Wrong password")
         }
-        this.logIn(username)
     },
 
     async logIn(username) {
@@ -62,6 +61,7 @@ export const useUserStore = defineStore('userStore', {
       await logOut(username)
       LSLogOut(username)
       this.logged = false
+      navigateTo('/')
     }
 
   }

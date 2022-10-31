@@ -1,8 +1,10 @@
 export function LSIsLogged() {
+    if (typeof window !== 'undefined') 
     return !!localStorage.getItem('logged')
 }
 
 export function LSGetLogged() {
+    if (typeof window !== 'undefined')
     return localStorage.getItem('logged')
 }
 
