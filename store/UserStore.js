@@ -41,18 +41,15 @@ export const useUserStore = defineStore('userStore', {
 
     async getUserDetails(username) {
       const details = await userDetails(username)
-      try {
-        if (details === null) {
-          throw "Empty details"
-        }
+      if (details === null) {
+        console.log("Could not get user details")
+      }
+      else {
         this.name = details.name
         this.age = details.age
         this.address = details.address
         this.bio = details.bio
         console.log(details.bio)
-      }
-      catch (e) {
-        console.log(e)
       }
     },
 

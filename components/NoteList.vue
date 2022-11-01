@@ -1,16 +1,19 @@
 <script setup>
+    import { computed } from 'vue'
     import { useNotesStore } from '~~/store/NotesStore'
     import { useUserStore } from '~~/store/UserStore'
     
     const notesStore = useNotesStore()
     const userStore = useUserStore()
     let notes = computed(() => userStore.notes)
+    console.log(notes)
     let name = computed(() => userStore.name)
 
-    onMounted(async () => {
+    onMounted(() => {
         let username = computed(() => userStore.username).value
-        await notesStore.getNotes(username) // await??
-        await userStore.getUserDetails(username)
+        notesStore.getNotes(username) // await??
+    console.log(notes.value)
+        userStore.getUserDetails(username)
     })
 
 </script>
