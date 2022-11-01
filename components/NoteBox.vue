@@ -27,10 +27,17 @@
         document.querySelector("#notebox"+id).classList.remove("hidden")
         notesStore.editNote(username, {id, title, content})
     }
+
+    function cancelEdit(id) {
+        document.querySelector("#editbox"+id).classList.add("hidden")
+        document.querySelector("#editbox"+id).classList.remove("block")
+        document.querySelector("#notebox"+id).classList.add("block")
+        document.querySelector("#notebox"+id).classList.remove("hidden")
+    }
 </script>
 
 <template>
-    <div id="note" class="inline-block w-1/4 h-fit bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
+    <div id="note" class="inline-block w-1/4 h-80 bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
         <div class="relative w-fit float-right">
             <button @click="notesStore.deleteNote(id, this.username)"
                 class="flex p-0 m-0 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
@@ -43,22 +50,25 @@
             </button>
         </div>
 
-        <div v-bind:id="'notebox'+id" class="block">
-            <h3 class=" py-4 break-words font-serif text-center text-gray-400">  {{ title }}  </h3>
-            <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0">
+        <div v-bind:id="'notebox'+id" class="block h-full">
+            <h3 class="py-4 break-words font-serif text-center text-gray-400">  {{ title }}  </h3>
+            <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0 mb-2">
                 {{ date }}
             </p>
-            <p class="pb-8 break-words text-left text-gray-400 w-full"> 
+            <p class="break-words text-left text-gray-400 w-full align-middle"> 
                 {{ content }}
             </p>
         </div>
         
         <div v-bind:id="'editbox'+id" class="hidden">
-            <input v-model="title" type="text" placeholder="Title" class="break-words mx-auto font-serif rounded-md text-md text-center py-2 my-2">
-            <textarea v-model="content" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-400 px-2" type="text" placeholder="Content"></textarea>
+            <input v-model="title" type="text" placeholder="Title" class="break-words mx-auto font-serif rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
+            <textarea v-model="content" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
             
-            <button @click="saveChanges(id, title, content)" class="button mt-4 mb-4">
+            <button @click="saveChanges(id, title, content)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
                 Save changes
+            </button>
+            <button @click="cancelEdit(id)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
+                Cancel
             </button>
         </div>
 

@@ -63,7 +63,6 @@ export const useUserStore = defineStore('userStore', {
     editBio(username, newBio) {
       if (setBio(username, newBio)) {
         this.bio = newBio
-        console.log(this.bio)
       }
       else {
         console.log("Problem while adding a new bio")

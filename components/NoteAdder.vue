@@ -11,11 +11,11 @@
 </script>
 
 <template>
-    <div id="note" class="inline-block w-1/4 h-fit bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
+    <div id="note" class="inline-block w-1/4 h-80 bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
 
         <div class="block">
             <input v-model="title" type="text" placeholder="Title"
-                class="flex mx-auto my-6 break-words font-serif text-md text-center focus:appearance-none focus:outline-none rounded-xl shadow-xl bg-gray-700 border-gray-800 text-gray-200 p-2"
+                class="flex w-3/4 mx-auto my-6 break-words font-serif text-md text-center focus:appearance-none focus:outline-none rounded-xl shadow-xl bg-gray-700 border-gray-800 text-gray-200 p-2"
             >
 
             <textarea v-model="content" type="text" placeholder="Content"
