@@ -4,15 +4,15 @@
 
     const userStore = useUserStore()
     
-    const username = computed(() => userStore.username).value
-    const name = computed(() => userStore.name).value
-    const age = computed(() => userStore.age).value
-    const address = computed(() => userStore.address).value
-    const bio = computed(() => userStore.bio).value
+    const username = computed(() => userStore.username)
+    const name = computed(() => userStore.name)
+    const age = computed(() => userStore.age)
+    const address = computed(() => userStore.address)
+    const bio = computed(() => userStore.bio)
     let newBio = ref(null)
 
     onMounted(() => {
-        userStore.getUserDetails(username)
+        userStore.getUserDetails(username.value)
     })
 
     function editBio() {
@@ -36,7 +36,8 @@
         
         document.querySelector("#savebiobtn").classList.remove("block")
         document.querySelector("#savebiobtn").classList.add("hidden")
-        userStore.editBio(newBio) // this function doesn't exist
+        console.log(username)
+        userStore.editBio(username.value, newBio.value)
     }
     
 </script>
@@ -56,8 +57,8 @@
                 </p>
             </div>
 
-            <p id="biobox" class="flex w-5/6 text-center block text-serif font-weight-300 mx-auto break-words p-4"> {{ bio }} </p>
-            <textarea v-model="newBio" id="editbox" class="hidden mx-auto flex rounded-md w-3/4 tracking-wide text-sm text-gray-400 px-2" type="text" placeholder="Bio"></textarea>
+            <p id="biobox" class="flex w-5/6 text-center block text-serif font-weight-300 mx-auto break-wors p-4"> {{ bio }} </p>
+            <textarea v-model="newBio" id="editbox" class="hidden mx-auto flex rounded-md w-3/4 dtracking-wide text-sm text-gray-400 px-2" type="text" placeholder="Bio"></textarea>
             <button @click="editBio()" id="editbiobtn" class="block my-4 mx-auto bg-[#4310c49d] text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Change bio</button>
             <button @click="saveChanges()" id="savebiobtn" class="hidden my-4 mx-auto bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Save changes</button>
 

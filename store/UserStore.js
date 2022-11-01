@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia' // '@pinia/nuxt'
 import { LSLogOut, LSSetLogged } from '~~/js/localStorage'
-import { logIn, logOut, register, userDetails } from '~~/js/requests'
+import { logIn, logOut, register, userDetails, setBio } from '~~/js/requests'
 
 export const useUserStore = defineStore('userStore', {
   state: () => {
@@ -33,7 +33,6 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async logIn(username) {
-      console.log(username)
       this.username = username
       this.logged = true
       LSSetLogged(username)
@@ -41,7 +40,6 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async getUserDetails(username) {
-      console.log(username)
       const details = await userDetails(username)
       try {
         if (details === null) {
@@ -51,6 +49,7 @@ export const useUserStore = defineStore('userStore', {
         this.age = details.age
         this.address = details.address
         this.bio = details.bio
+        console.log(details.bio)
       }
       catch (e) {
         console.log(e)
@@ -62,8 +61,16 @@ export const useUserStore = defineStore('userStore', {
       LSLogOut(username)
       this.logged = false
       navigateTo('/')
+    },
+
+    editBio(username, newBio) {
+      if (setBio(username, newBio)) {
+        this.bio = newBio
+        console.log(this.bio)
+      }
+      else {
+        console.log("Problem while adding a new bio")
+      }
     }
-
   }
-
 })

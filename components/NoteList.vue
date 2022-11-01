@@ -4,15 +4,15 @@
     
     const notesStore = useNotesStore()
     const userStore = useUserStore()
+    let notes = computed(() => userStore.notes)
+    let name = computed(() => userStore.name)
 
-    onMounted(() => {
+    onMounted(async () => {
         let username = computed(() => userStore.username).value
-        notesStore.getNotes(username) // await??
-        userStore.getUserDetails(username)
+        await notesStore.getNotes(username) // await??
+        await userStore.getUserDetails(username)
     })
 
-    const notes = notesStore.notes
-    let name = computed(() => userStore.name)
 </script>
 
 <template>

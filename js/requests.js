@@ -151,7 +151,7 @@ export async function setBio(username, bio) {
     const requestBody = {
         bio
     }
-    const response = await fetch ('http://localhost:5173/profile/bio', {
+    const response = await fetch ('http://localhost:5173/profile/setbio', {
         method: 'PUT',
         body: JSON.stringify(requestBody),
         headers: {

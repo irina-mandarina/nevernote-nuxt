@@ -4,7 +4,7 @@ const userStore = useUserStore()
 
 export default defineNuxtRouteMiddleware((to, from) => {
     // if (to === '/notes' || to === '/profile') {
-    if (to.fullPath === '/notes' || to.fullPath === '/profile') {
+    if (to.path === '/notes' || to.path === '/profile') {
         if (!userStore.logged) {
             if (LSIsLogged()) {
                 userStore.logIn(LSGetLogged())
@@ -15,7 +15,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
             }
         }
         else {
-            console.log(3)
             return true
         }
     }
