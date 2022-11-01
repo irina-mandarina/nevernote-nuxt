@@ -17,12 +17,12 @@ export async function getNotes(username) {
     else return []
 }
 
-export function addNote(username, title, content) {
+export async function addNote(username, title, content) {
     const requestBody = {
         title,
         content
     }
-    fetch ('http://localhost:5173/notes', {
+    const response = await fetch ('http://localhost:5173/notes', {
         method: 'POST',
         body: JSON.stringify(requestBody),
         headers: {
@@ -30,13 +30,10 @@ export function addNote(username, title, content) {
             username
         }
     })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data)
-        })
         .catch((error) => {
             console.log(error)
         })
+    return response.status === 201
 }
 
 export function deleteNote(id, username) {
