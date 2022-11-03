@@ -1,61 +1,71 @@
 <script setup>
-
+    import { computed, watch } from 'vue'
     import { useNotesStore } from '~~/store/NotesStore'
     import { useUserStore } from '~~/store/UserStore'
 
     const notesStore = useNotesStore()
     const userStore = useUserStore()
     const username = computed(() => userStore.username).value
+    const id = computed(() => notesStore.bigNoteId)
 
-    defineProps({
-        id: Number,
-        title: String,
-        content: String,
-        date: String
-    })
-
+    let title = ref(null)
+    let date = ref(null)
+    let content = ref(null)
     let newTitle = ref(null)
     let newContent = ref(null)
 
-    function allowEdit(id) {
-        newTitle = ref(this.title)
-        newContent = ref(this.content)
-        document.querySelector("#editbox"+id).classList.remove("hidden")
-        document.querySelector("#editbox"+id).classList.add("block")
-        document.querySelector("#notebox"+id).classList.remove("block")
-        document.querySelector("#notebox"+id).classList.add("hidden")
+    watch(id, (newId) => {
+        console.log(`id is ${newId}`)
+        if (newId !== undefined && newId !== null) {
+            let note = notesStore.notes.filter(note => note.id === newId)[0]
+            title.value = note.title
+            date.value = note.date
+            content.value = note.content
+        }
+    })
+
+    function allowEdit() {
+        newTitle = ref(title.value)
+        newContent = ref(content.value)
+        document.querySelector("#big-editbox"+id.value).classList.remove("hidden")
+        document.querySelector("#big-editbox"+id.value).classList.add("block")
+        document.querySelector("#big-notebox"+id.value).classList.remove("block")
+        document.querySelector("#big-notebox"+id.value).classList.add("hidden")
     }
+
     function saveChanges(editedNote) {
-        document.querySelector("#editbox"+editedNote.id).classList.add("hidden")
-        document.querySelector("#editbox"+editedNote.id).classList.remove("block")
-        document.querySelector("#notebox"+editedNote.id).classList.add("block")
-        document.querySelector("#notebox"+editedNote.id).classList.remove("hidden")
+        console.log(("#big-editbox"+id.value))
+        document.querySelector("#big-editbox"+id.value).classList.add("hidden")
+        document.querySelector("#big-editbox"+id.value).classList.remove("block")
+        document.querySelector("#big-notebox"+id.value).classList.add("block")
+        document.querySelector("#big-notebox"+id.value).classList.remove("hidden")
         notesStore.editNote(username, {id: editedNote.id, title: editedNote.title, content: editedNote.content, date: editedNote.date})
     }
 
     function cancelEdit(id) {
-        document.querySelector("#editbox"+id).classList.add("hidden")
-        document.querySelector("#editbox"+id).classList.remove("block")
-        document.querySelector("#notebox"+id).classList.add("block")
-        document.querySelector("#notebox"+id).classList.remove("hidden")
+        document.querySelector("#big-editbox"+id).classList.add("hidden")
+        document.querySelector("#big-editbox"+id).classList.remove("block")
+        document.querySelector("#big-notebox"+id).classList.add("block")
+        document.querySelector("#big-notebox"+id).classList.remove("hidden")
     }
 </script>
 
 <template>
-    <div v-bind:id="'note' + id" class="inline-block w-1/4 h-80 bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
+    <div :id="'big-note' + id" class="w-1/2 h-fit bg-gray-900 rounded-3xl p-8 mx-auto mt-24 sticky shadow-lg">
         <div class="relative w-fit float-right">
-            <button @click="notesStore.deleteNote(id, this.username)"
+            <button @click="$emit('closeNote', id)"
                 class="flex p-0 m-0 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
                 >
+                <p class="text-xs pt-1 px-2">Close note</p>
                 x
             </button>
             <br/>
-            <button @click="allowEdit(id)" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
+            <button @click="allowEdit()" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                 <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
             </button>
         </div>
 
-        <div @click="$emit('showNote', id)" v-bind:id="'notebox'+id" class="block h-full">
+        <div :id="'big-notebox'+id" class="block h-full">
             <h3 class="py-4 break-words font-serif text-center text-gray-400">  {{ title }}  </h3>
             <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0 mb-2">
                 {{ date }}
@@ -65,7 +75,7 @@
             </p>
         </div>
         
-        <div v-bind:id="'editbox'+id" class="hidden">
+        <div v-bind:id="'big-editbox'+id" class="hidden">
             <input v-model="newTitle" type="text" placeholder="Title" class="break-words mx-auto font-serif rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
             <textarea v-model="newContent" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
             
@@ -78,12 +88,3 @@
         </div>
     </div>
 </template>
-
-<style>
-    .line-clamp {
-        display: -webkit-box;
-        -webkit-line-clamp: 7;
-        -webkit-box-orient: vertical;  
-    }
-
-</style>

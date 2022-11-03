@@ -1,7 +1,14 @@
+<script setup>
+debugger
+    definePageMeta({
+        middleware: 'authorise'
+    })
+</script>
+
 <template>
     <div>
         <NavigationBar />
-        <main>
+        <main class="w-full h-full">
             <slot />
         </main>
     </div>

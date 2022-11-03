@@ -5,18 +5,19 @@ const userStore = useUserStore()
 export default defineNuxtRouteMiddleware((to, from) => {
     // if (to === '/notes' || to === '/profile') {
     console.log(to.path)
-    if (to.path === '/notes' || to.path === '/profile') {
+    debugger
+    // if (to.path === '/notes' || to.path === '/profile') {
         if (!userStore.logged) {
             if (LSIsLogged()) {
                 userStore.logIn(LSGetLogged())
                 return true
             }
             else {
-                navigateTo('/') // to log in first
+                return navigateTo('/login') // to log in first
             }
         }
         else {
             return true
         }
-    }
+    // }
 })

@@ -4,7 +4,8 @@ import { addNote, editNote, getNotes, deleteNote } from '~~/js/requests'
 export const useNotesStore = defineStore('notesStore', {
   state: () => {
     return {
-        notes: null
+        notes: null,
+        bigNoteId: undefined
     }
   },
 
@@ -26,14 +27,14 @@ export const useNotesStore = defineStore('notesStore', {
       }
     },
 
-    editNote(username, newNote) {
+    editNote(username, editedNote) {
         // change this.notes
-        // for(let i = 0; i < this.notes.length; i++) {
-        //   if (this.notes[i].id === editedNote.id) {
-        //     this.notes[i] = editedNote
-        //   }
-        // }
-        editNote(newNote.id, username, newNote.title, newNote.content)
+        for(let i = 0; i < this.notes.length; i++) {
+          if (this.notes[i].id === editedNote.id) {
+            this.notes[i] = editedNote
+          }
+        }
+        editNote(editedNote.id, username, editedNote.title, editedNote.content)
     },
 
     deleteNote(noteId, username) {

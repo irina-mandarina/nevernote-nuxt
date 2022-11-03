@@ -2,7 +2,8 @@ import { LSGetLogged, LSIsLogged } from "../js/localStorage"
 import { useUserStore } from "../store/UserStore"
 
 export default defineNuxtRouteMiddleware((to, from) => {    
-    if (to.path === '/') {
+    // if (to.path === '/') {
+        debugger
         const userStore = useUserStore()
         if (!userStore.logged) { // not logged in store
             if (LSIsLogged()) { // but is logged in local storage
@@ -16,5 +17,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
         if (userStore.logged) { // logged in the store
             return navigateTo('/notes') // redirect to notes
         }
-    }
+    // }
 })

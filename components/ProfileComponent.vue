@@ -42,7 +42,7 @@
 </script>
 
 <template>
-    <div class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg p-10">
+    <div class="w-full h-full absolute bg-gray-800 text-indigo-900 pattern-grid-lg p-10">
         <div class="w-1/3 p-8 h-fit mx-auto bg-gray-900 rounded-xl shadow-2xl text-center">
             <div class="w-full text-center my-6">
                 <p class="p-2 text-xl text-violet-800">Hello, <span class="font-light duration-300 hover:text-blue-700">  {{ name }} </span>!</p>
@@ -56,8 +56,8 @@
                 </p>
             </div>
 
-            <p id="biobox" class="flex w-5/6 text-center block text-serif font-weight-300 mx-auto break-words p-4"> {{ bio }} </p>
-            <textarea v-model="newBio" id="editbox" class="hidden mx-auto flex rounded-md w-3/4 tracking-wide text-sm text-gray-400 px-2" type="text" placeholder="Bio"></textarea>
+            <p id="biobox" class="flex w-5/6 text-center block text-serif font-weight-300 mx-auto break-words whitespace-normal p-4"> {{ bio }} </p>
+            <textarea v-model="newBio" id="editbox" class="hidden mx-auto flex rounded-md w-3/4 whitespace-normal tracking-wide text-sm text-gray-400 px-2 resize-none break-words focus:outline-none bg-gray-600" type="text" placeholder="Bio"></textarea>
             <button @click="editBio()" id="editbiobtn" class="block my-4 mx-auto bg-[#4310c49d] text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Change bio</button>
             <button @click="saveChanges()" id="savebiobtn" class="hidden my-4 mx-auto bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Save changes</button>
 
@@ -65,7 +65,5 @@
             <button @click="userStore.logOut(username)" class="my-6 flex mx-auto mx-auto bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Log out</button>
 
         </div>
-        
-        <link href="https://unpkg.com/pattern.css" rel="stylesheet" />
     </div>
 </template>
