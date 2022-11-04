@@ -5,7 +5,8 @@ export const useNotesStore = defineStore('notesStore', {
   state: () => {
     return {
         notes: null,
-        bigNoteId: undefined
+        bigNoteId: undefined,
+        editingNoteId: undefined
     }
   },
 
@@ -29,12 +30,24 @@ export const useNotesStore = defineStore('notesStore', {
 
     editNote(username, editedNote) {
         // change this.notes
+        console.log(editedNote)
         for(let i = 0; i < this.notes.length; i++) {
           if (this.notes[i].id === editedNote.id) {
             this.notes[i] = editedNote
           }
         }
         editNote(editedNote.id, username, editedNote.title, editedNote.content)
+    },
+
+    editingNote() {
+      return (this.editingNoteId > 0)
+    },
+
+    cancelEdit() {
+      document.querySelector("#editbox"+this.editingNoteId).classList.add("hidden")
+      document.querySelector("#editbox"+this.editingNoteId).classList.remove("block")
+      document.querySelector("#notebox"+this.editingNoteId).classList.add("block")
+      document.querySelector("#notebox"+this.editingNoteId).classList.remove("hidden")
     },
 
     deleteNote(noteId, username) {

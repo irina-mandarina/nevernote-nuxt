@@ -145,12 +145,10 @@ export async function userDetails(username) {
 }
 
 export async function setBio(username, bio) {
-    const requestBody = {
-        bio
-    }
+    const requestBody = bio
     const response = await fetch ('http://localhost:5173/profile/setbio', {
         method: 'PUT',
-        body: JSON.stringify(requestBody),
+        body: bio,
         headers: {
             "Content-type": "application/json",
             "Accept": "application/json, */*",

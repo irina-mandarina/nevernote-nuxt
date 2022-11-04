@@ -15,8 +15,8 @@
     })
 
     function showNote(id) {
-        // document.querySelector("#notelist").classList.add('fixed')
-        document.querySelector("#big-note-bg").classList.remove('hidden')
+        // document.querySelector("#notelist").classList.add('pointer-events-none')
+        // document.querySelector("#big-note-bg").classList.remove('hidden')
         // document.querySelector("#big-note-bg").classList.add('display-single-note-bg')
         // document.querySelector("#big-note-bg").classList.add('block')
         notesStore.bigNoteId = id
@@ -25,11 +25,11 @@
     }
 
     function closeNote(id) {
-        // document.querySelector("#notelist").classList.remove('fixed')
+        // document.querySelector("#notelist").classList.remove('pointer-events-none')
+        // document.querySelector("#big-note-bg").classList.add('hidden')
         // document.querySelector("#big-note-bg").classList.remove('display-single-note-bg')
         // document.querySelector("#big-note-bg").classList.remove('block')
-        document.querySelector("#big-note-bg").classList.add('hidden')
-        notesStore.bigNoteId = id
+        notesStore.bigNoteId = -1
         console.log(notesStore.bigNoteId)
         // console.log(id)
     }
@@ -38,16 +38,18 @@
 
 <template>
     <div id="big-note-bg" class="hidden display-single-note-bg w-full h-full">
-        <BigNoteBox v-if="notesStore.bigNoteId >= 0"     @close-note="closeNote"/>
+        <BigNoteBox v-if="notesStore.bigNoteId >= 0" @close-note="closeNote"/>
     </div>
 
     <div id="notelist" class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg">
         <div class="text-center py-24">
-            <p class="text-gray-300 font-serif font-medium text-5xl">Wellcome, {{ name }}!</p>
+            <p class="text-gray-300 font-frank font-medium text-5xl">Wellcome, {{ name }}!</p>
         </div>
 
         <NoteAdder />
+        <div>
         <NoteBox v-for="note in notes" :id="note.id" :title="note.title" :content="note.content" :date="note.date" @show-note="showNote" />
+    </div>
     </div>
 </template>
 

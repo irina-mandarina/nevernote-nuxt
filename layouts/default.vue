@@ -1,9 +1,4 @@
-<script setup>
-debugger
-    definePageMeta({
-        middleware: 'authorise'
-    })
-</script>
+
 
 <template>
     <div>

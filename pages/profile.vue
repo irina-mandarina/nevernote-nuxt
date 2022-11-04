@@ -1,11 +1,8 @@
-<script setup>
-    definePageMeta({
-        middleware: 'authorise'
-    })
-</script>
-
 <template>
-    <NuxtLayout name="default">
-        <ProfileComponent />
-    </NuxtLayout>
+    <div>
+        <NuxtLayout name="default">
+            <ProfileComponent />
+        </NuxtLayout>
+    </div>
+    
 </template>

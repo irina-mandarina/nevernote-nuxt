@@ -36,7 +36,7 @@ export const useUserStore = defineStore('userStore', {
       this.username = username
       this.logged = true
       LSSetLogged(username)
-      navigateTo('/notes')
+      // navigateTo('/notes')
     },
 
     async getUserDetails(username) {
