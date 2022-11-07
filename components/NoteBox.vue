@@ -19,7 +19,9 @@
     })
 
 
-    function allowEdit(id) {
+    function allowEdit(id, title, content) {
+        newTitle.value = title
+        newContent.value = content
         notesStore.fillEditing()
         notesStore.editing.set(id, true)
     }
@@ -50,7 +52,7 @@
                 x
             </button>
             <br/>
-            <button @click="allowEdit(id)" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
+            <button @click="allowEdit(id, title, content)" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                 <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
             </button>
         </div>

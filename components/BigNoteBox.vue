@@ -7,56 +7,40 @@
     const notesStore = useNotesStore()
     const userStore = useUserStore()
     const username = computed(() => userStore.username).value
-    const id = computed(() => notesStore.bigNoteId)
+    const id = computed(() => notesStore.bigNoteId).value
 
-    let title = ref(null)
-    let date = ref(null)
-    let content = ref(null)
+    let title = computed(() => notesStore.notes.filter((note) => id === note.id)[0].title)
+    let date = computed(() => notesStore.notes.filter((note) => id === note.id)[0].date)
+    let content = computed(() => notesStore.notes.filter((note) => id === note.id)[0].content)
     let newTitle = ref(null)
     let newContent = ref(null)
-    let editing = false
-
-    // watch(id, (newId) => {
-    //     console.log(`id is ${newId}`)
-    //     if (newId !== undefined && newId !== null) {
-    //         let note = notesStore.notes.filter(note => note.id === newId)[0]
-    //         title.value = note.title
-    //         date.value = note.date
-    //         content.value = note.content
-    //     }
-    // })
+    let editingBigNote = ref(false)
 
     function allowEdit() {
-        editing = true
-        // newTitle = ref(title.value)
-        // console.log(title.value)
-        newContent = ref(content.value)
-        // document.querySelector("#big-editbox"+id.value).classList.remove("hidden")
-        // document.querySelector("#big-editbox"+id.value).classList.add("block")
-        // document.querySelector("#big-notebox"+id.value).classList.remove("block")
-        // document.querySelector("#big-notebox"+id.value).classList.add("hidden")
+        newTitle.value = title.value
+        newContent.value = content.value
+        notesStore.fillEditing()
+        editingBigNote.value = true
     }
 
-    function saveChanges(editedNote) {
-        editing = false
-        // console.log(("#big-editbox"+id.value))
-        // document.querySelector("#big-editbox"+id.value).classList.add("hidden")
-        // document.querySelector("#big-editbox"+id.value).classList.remove("block")
-        // document.querySelector("#big-notebox"+id.value).classList.add("block")
-        // document.querySelector("#big-notebox"+id.value).classList.remove("hidden")
-        notesStore.editNote(username, {id: editedNote.id, title: editedNote.title, content: editedNote.content, date: editedNote.date})
+    function saveChanges(id, date) {
+        editingBigNote.value = false
+
+        let editedNote = {
+            id,
+            title: newTitle.value,
+            content: newContent.value,
+            date
+        }
+        notesStore.editNote(username, editedNote)
     }
 
     function cancelEdit(id) {
-        editing = false
-        // document.querySelector("#big-editbox"+id).classList.add("hidden")
-        // document.querySelector("#big-editbox"+id).classList.remove("block")
-        // document.querySelector("#big-notebox"+id).classList.add("block")
-        // document.querySelector("#big-notebox"+id).classList.remove("hidden")
+        editingBigNote.value = false
     }
 
     function closeNote(id) {
-        if (editing) {
+        if (editingBigNote.value === true) {
             cancelEdit(id)
 
         }
@@ -66,7 +50,7 @@
 </script>
 
 <template>
-    <div :id="'big-note' + id" class="w-1/2 h-fit bg-gray-900 rounded-3xl p-8 mx-auto mt-24 sticky shadow-lg">
+    <div :id="'big-note' + id" class="w-1/2 h-fit absolute bg-gray-900 rounded-3xl p-8 mx-auto sticky shadow-lg text-white">
         <div class="relative w-fit float-right">
             <button @click="closeNote(id)"
                 class="flex p-0 m-0 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
@@ -80,12 +64,7 @@
             </button>
         </div>
 
-        <div :id="'big-notebox'+id" 
-            :class="{
-                block: !editing,
-                hidden: editing
-            }" 
-        >
+        <div v-if="!editingBigNote" :id="'big-notebox'+id" >
             <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ title }}  </h3>
             <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0 mb-2">
                 {{ date }}
@@ -95,21 +74,16 @@
             </p>
         </div>
         
-        <div v-bind:id="'big-editbox'+id"
-            :class="{
-                block: editing,
-                hidden: !editing
-            }" 
-        >
-            <input v-model="title" type="text" placeholder="Title" class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
-            <textarea v-model="content" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
+        <div v-if="editingBigNote" v-bind:id="'big-editbox'+id" >
+            <input v-model="newTitle" type="text" placeholder="Title" class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
+            <textarea v-model="newContent" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
             
-            <button @click="saveChanges({id, title, content, date})" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
+            <button @click="saveChanges(id, date)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
                 Save changes
             </button>
             <button @click="cancelEdit(id)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
                 Cancel
             </button>
         </div>
-    </div>
+    </div> 
 </template>

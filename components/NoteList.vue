@@ -21,7 +21,6 @@
         // document.querySelector("#big-note-bg").classList.add('block')
         notesStore.bigNoteId = id
         console.log(notesStore.bigNoteId)
-        // console.log(id)
     }
 
     function closeNote(id) {
@@ -37,11 +36,11 @@
 </script>
 
 <template>
-    <div id="big-note-bg" class="hidden display-single-note-bg w-full h-full">
-        <BigNoteBox v-if="notesStore.bigNoteId >= 0" @close-note="closeNote"/>
+    <div v-if="notesStore.bigNoteId >= 0" id="big-note-bg" class="display-single-note-bg w-full h-full">
+        <BigNoteBox @close-note="closeNote"/>
     </div>
 
-    <div id="notelist" class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg">
+    <div id="notelist" class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg" >
         <div class="text-center py-24">
             <p class="text-gray-300 font-frank font-medium text-5xl">Wellcome, {{ name }}!</p>
         </div>
@@ -56,7 +55,6 @@
 <style> 
     .display-single-note-bg {
         position: fixed;
-        z-index: 0;
         top: 0;
         background-color: rgba(0, 0, 0, 0.536);
     }
