@@ -10,27 +10,17 @@
 
     onMounted(() => {
         let username = computed(() => userStore.username).value
-        notesStore.getNotes(username) // await??
+        notesStore.getNotes(username)
         userStore.getUserDetails(username)
     })
 
     function showNote(id) {
-        // document.querySelector("#notelist").classList.add('pointer-events-none')
-        // document.querySelector("#big-note-bg").classList.remove('hidden')
-        // document.querySelector("#big-note-bg").classList.add('display-single-note-bg')
-        // document.querySelector("#big-note-bg").classList.add('block')
+        notesStore.fillEditing()
         notesStore.bigNoteId = id
-        console.log(notesStore.bigNoteId)
     }
 
     function closeNote(id) {
-        // document.querySelector("#notelist").classList.remove('pointer-events-none')
-        // document.querySelector("#big-note-bg").classList.add('hidden')
-        // document.querySelector("#big-note-bg").classList.remove('display-single-note-bg')
-        // document.querySelector("#big-note-bg").classList.remove('block')
         notesStore.bigNoteId = -1
-        console.log(notesStore.bigNoteId)
-        // console.log(id)
     }
 
 </script>
@@ -40,7 +30,11 @@
         <BigNoteBox @close-note="closeNote"/>
     </div>
 
-    <div id="notelist" class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg" >
+    <div id="notelist" class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg" 
+        :class="{
+            'pointer-events-none': notesStore.bigNoteId >= 0
+        }"
+    >
         <div class="text-center py-24">
             <p class="text-gray-300 font-frank font-medium text-5xl">Wellcome, {{ name }}!</p>
         </div>

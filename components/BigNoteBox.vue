@@ -50,7 +50,7 @@
 </script>
 
 <template>
-    <div :id="'big-note' + id" class="w-1/2 h-fit absolute bg-gray-900 rounded-3xl p-8 mx-auto sticky shadow-lg text-white">
+    <div :id="'big-note' + id" class="w-1/2 h-fit absolute bg-gray-900 rounded-3xl p-8 mx-auto mt-24 sticky shadow-lg text-white">
         <div class="relative w-fit float-right">
             <button @click="closeNote(id)"
                 class="flex p-0 m-0 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
