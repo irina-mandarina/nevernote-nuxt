@@ -31,28 +31,28 @@
         // newTitle = ref(title.value)
         // console.log(title.value)
         newContent = ref(content.value)
-        document.querySelector("#big-editbox"+id.value).classList.remove("hidden")
-        document.querySelector("#big-editbox"+id.value).classList.add("block")
-        document.querySelector("#big-notebox"+id.value).classList.remove("block")
-        document.querySelector("#big-notebox"+id.value).classList.add("hidden")
+        // document.querySelector("#big-editbox"+id.value).classList.remove("hidden")
+        // document.querySelector("#big-editbox"+id.value).classList.add("block")
+        // document.querySelector("#big-notebox"+id.value).classList.remove("block")
+        // document.querySelector("#big-notebox"+id.value).classList.add("hidden")
     }
 
     function saveChanges(editedNote) {
         editing = false
         // console.log(("#big-editbox"+id.value))
-        document.querySelector("#big-editbox"+id.value).classList.add("hidden")
-        document.querySelector("#big-editbox"+id.value).classList.remove("block")
-        document.querySelector("#big-notebox"+id.value).classList.add("block")
-        document.querySelector("#big-notebox"+id.value).classList.remove("hidden")
+        // document.querySelector("#big-editbox"+id.value).classList.add("hidden")
+        // document.querySelector("#big-editbox"+id.value).classList.remove("block")
+        // document.querySelector("#big-notebox"+id.value).classList.add("block")
+        // document.querySelector("#big-notebox"+id.value).classList.remove("hidden")
         notesStore.editNote(username, {id: editedNote.id, title: editedNote.title, content: editedNote.content, date: editedNote.date})
     }
 
     function cancelEdit(id) {
         editing = false
-        document.querySelector("#big-editbox"+id).classList.add("hidden")
-        document.querySelector("#big-editbox"+id).classList.remove("block")
-        document.querySelector("#big-notebox"+id).classList.add("block")
-        document.querySelector("#big-notebox"+id).classList.remove("hidden")
+        // document.querySelector("#big-editbox"+id).classList.add("hidden")
+        // document.querySelector("#big-editbox"+id).classList.remove("block")
+        // document.querySelector("#big-notebox"+id).classList.add("block")
+        // document.querySelector("#big-notebox"+id).classList.remove("hidden")
     }
 
     function closeNote(id) {
@@ -80,7 +80,12 @@
             </button>
         </div>
 
-        <div :id="'big-notebox'+id" class="block h-full">
+        <div :id="'big-notebox'+id" 
+            :class="{
+                block: !editing,
+                hidden: editing
+            }" 
+        >
             <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ title }}  </h3>
             <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0 mb-2">
                 {{ date }}
@@ -90,7 +95,7 @@
             </p>
         </div>
         
-        <div v-bind:id="'big-editbox'+id" class="hidden"
+        <div v-bind:id="'big-editbox'+id"
             :class="{
                 block: editing,
                 hidden: !editing

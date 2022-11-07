@@ -49,7 +49,6 @@ export const useUserStore = defineStore('userStore', {
         this.age = details.age
         this.address = details.address
         this.bio = details.bio
-        console.log(details.bio) // looks like: {"bio":"............."}, while the other details are just strings
       }
     },
 

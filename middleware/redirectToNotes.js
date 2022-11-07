@@ -3,7 +3,7 @@ import { useUserStore } from "../store/UserStore"
 
 export default defineNuxtRouteMiddleware((to, from) => {    
     // if (to.path === '/') {
-        debugger
+        // debugger
         const userStore = useUserStore()
         if (!userStore.logged) { // not logged in store
             if (LSIsLogged()) { // but is logged in local storage

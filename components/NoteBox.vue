@@ -8,6 +8,9 @@
     const userStore = useUserStore()
     const username = computed(() => userStore.username).value
 
+    let newTitle = ref("")
+    let newContent = ref("")
+
     defineProps({
         id: Number,
         title: String,
@@ -15,29 +18,26 @@
         date: String
     })
 
+
     function allowEdit(id) {
-        if (notesStore.editingNoteId > 0) {
-            notesStore.cancelEdit()
-        }
-        notesStore.editingNote = id
-        document.querySelector("#editbox"+id).classList.remove("hidden")
-        document.querySelector("#editbox"+id).classList.add("block")
-        document.querySelector("#notebox"+id).classList.remove("block")
-        document.querySelector("#notebox"+id).classList.add("hidden")
+        notesStore.fillEditing()
+        notesStore.editing.set(id, true)
     }
-    function saveChanges(editedNote) {
-        document.querySelector("#editbox"+editedNote.id).classList.add("hidden")
-        document.querySelector("#editbox"+editedNote.id).classList.remove("block")
-        document.querySelector("#notebox"+editedNote.id).classList.add("block")
-        document.querySelector("#notebox"+editedNote.id).classList.remove("hidden")
-        notesStore.editNote(username, {id: editedNote.id, title: editedNote.title, content: editedNote.content, date: editedNote.date})
+
+    function saveChanges(id, date) {
+        let editedNote = {
+            id,
+            title: newTitle.value,
+            content: newContent.value,
+            date
+        }
+        console.log(editedNote)
+        notesStore.editing.set(editedNote.id, false)
+        notesStore.editNote(username, editedNote)
     }
 
     function cancelEdit(id) {
-        document.querySelector("#editbox"+id).classList.add("hidden")
-        document.querySelector("#editbox"+id).classList.remove("block")
-        document.querySelector("#notebox"+id).classList.add("block")
-        document.querySelector("#notebox"+id).classList.remove("hidden")
+        notesStore.editing.set(id, false)
     }
 </script>
 
@@ -55,7 +55,7 @@
             </button>
         </div>
 
-        <div @click="$emit('showNote', id)" v-bind:id="'notebox'+id" class="block h-full">
+        <div v-if="!notesStore.editing.get(id)" @click="$emit('showNote', id)" v-bind:id="'notebox'+id" >
             <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ title }}  </h3>
             <p class="pb-2 text-xs float-left italic font-josefin-slab text-violet-800 flex w-full ml-0 mb-2">
                 {{ date }}
@@ -65,11 +65,11 @@
             </p>
         </div>
         
-        <div v-bind:id="'editbox'+id" class="hidden">
-            <input v-model="title" type="text" placeholder="Title" class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
-            <textarea v-model="content" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
+        <div v-if="notesStore.editing.get(id)" v-bind:id="'editbox'+id" >
+            <input v-model="newTitle" type="text" placeholder="Title" class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
+            <textarea v-model="newContent" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
             
-            <button @click="saveChanges({id, title, content, date})" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
+            <button @click="saveChanges(id, date)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
                 Save changes
             </button>
             <button @click="cancelEdit(id)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">

@@ -1,5 +1,5 @@
 <script setup>
-debugger
+// debugger
     definePageMeta({
         middleware: ['authorise']
     })

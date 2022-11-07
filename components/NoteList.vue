@@ -46,10 +46,10 @@
             <p class="text-gray-300 font-frank font-medium text-5xl">Wellcome, {{ name }}!</p>
         </div>
 
-        <NoteAdder />
-        <div>
-        <NoteBox v-for="note in notes" :id="note.id" :title="note.title" :content="note.content" :date="note.date" @show-note="showNote" />
-    </div>
+        <div class="flex flex-wrap">
+            <NoteAdder />
+            <NoteBox v-for="note in notes" :id="note.id" :title="note.title" :content="note.content" :date="note.date" @show-note="showNote" />
+        </div>
     </div>
 </template>
 
