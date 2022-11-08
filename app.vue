@@ -1,3 +1,7 @@
+<!-- <script setup>
+  this.getElementsByTagName("body").classList.add("bg-gray-800 text-indigo-900 pattern-grid-lg")
+</script> -->
+
 <template>
   <div>
     <Head>

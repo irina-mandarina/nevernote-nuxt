@@ -22,6 +22,7 @@ export async function addNote(username, title, content) {
         title,
         content
     }
+    let copy
     const response = await fetch ('http://localhost:5173/notes', {
         method: 'POST',
         body: JSON.stringify(requestBody),
@@ -30,35 +31,39 @@ export async function addNote(username, title, content) {
             username
         }
     })
+        .then((response) => copy = response.clone())
+        .then((response) => response.json())
         .catch((error) => {
             console.log(error)
         })
-    return response.status === 201
+    // return response.status === 201
+    return {response, status: copy.status}
 }
 
-export function deleteNote(id, username) {
-    fetch ('http://localhost:5173/notes/' + id, {
+export async function deleteNote(id, username) {
+    const response = await fetch ('http://localhost:5173/notes/' + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             username
         }
     })
-        .then((response) => response.text())
-        .then((data) => {
-            console.log(data)
-        })
+        // .then((response) => response.text())
+        // .then((data) => {
+        //     console.log(data)
+        // })
         .catch((error) => {
             console.log(error)
         })
+    return response.status
 }
 
-export function editNote(id, username, title, content) {
+export async function editNote(id, username, title, content) {
     const requestBody = {
         title,
         content
     }
-    fetch ('http://localhost:5173/notes/' + id, {
+    const response = await fetch ('http://localhost:5173/notes/' + id, {
         method: 'PUT',
         body: JSON.stringify(requestBody),
         headers: {
@@ -67,13 +72,15 @@ export function editNote(id, username, title, content) {
             username
         }
     })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data)
-        })
+        // .then((response) => response.json())
+        // .then((data) => {
+        //     console.log(data)
+        // })
         .catch((error) => {
             console.log(error)
         })
+        // console.log(response.status)
+    return response.status
 }
 
 export async function register(username, password, name, address, age) {
@@ -84,7 +91,7 @@ export async function register(username, password, name, address, age) {
         age,
         address
     }
-    fetch ('http://localhost:5173/auth/register', {
+    const response = await fetch ('http://localhost:5173/auth/register', {
         method: 'POST',
         body: JSON.stringify(requestBody),
         headers: {
@@ -95,6 +102,7 @@ export async function register(username, password, name, address, age) {
         .catch((error) => {
             console.log(error)
         })
+    return response.status
 }
 
 export async function logIn(username, password) {
@@ -110,7 +118,7 @@ export async function logIn(username, password) {
             "Accept": "application/json, */*"
         }
     })
-    return response.status === 200
+    return response.status
 }
 
 export async function logOut(username) {
@@ -155,5 +163,5 @@ export async function setBio(username, bio) {
             username
         }
     })
-    return response.status === 200
+    return response.status
 }

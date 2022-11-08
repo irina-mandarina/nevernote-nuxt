@@ -13,7 +13,6 @@ export const useNotesStore = defineStore('notesStore', {
   actions: {
     async getNotes(username) {
         this.notes = await getNotes(username)
-        
         this.editing = new Map()
         this.fillEditing()
     },
@@ -24,31 +23,61 @@ export const useNotesStore = defineStore('notesStore', {
       }
     },
 
-    addNote(username, title, content) {
-      if (addNote(username, title, content)) { 
+    async addNote(username, title, content) {
+      const {response, status} = await addNote(username, title, content)
+      if (status === 201) { 
         let today = new Date()
         let date = today.getFullYear() + '.'+ (today.getMonth()+1) + '.' + today.getDate()
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
         let dateTime = date + ' ' + time
-        this.notes.push({title, content, date: dateTime})
+        this.notes.push({id: response.id, title, content, date: dateTime})
+      }
+      else if (status === 500) {
+        console.log("Could not connect to server")
+      }
+      else if (status === 401) {
+        console.log("Unauthorised")
       }
       else {
-        console.log("Could not add note: " + title)
+        console.log("Could not add note: " + title + ". Status: " + status)
       }
     },
 
-    editNote(username, editedNote) {
-        for(let i = 0; i < this.notes.length; i++) {
-          if (this.notes[i].id === editedNote.id) {
-            this.notes[i] = editedNote
+    async editNote(username, editedNote) {
+        const status = await editNote(editedNote.id, username, editedNote.title, editedNote.content)
+
+        if (status === 201) {
+          for(let i = 0; i < this.notes.length; i++) {
+            if (this.notes[i].id === editedNote.id) {
+              this.notes[i] = editedNote
+            }
           }
         }
-        editNote(editedNote.id, username, editedNote.title, editedNote.content)
+        else if (status === 500) {
+          console.log("Could not connect to server")
+        }
+        else if (status === 401) {
+          console.log("Unauthorised")
+        }
+        else {
+          console.log("Could not edit note: " + editedNote.title + ". Status: " + status)
+        }
     },
 
-    deleteNote(noteId, username) {
-      this.notes = this.notes.filter((note) => note.id !== noteId)
-      deleteNote(noteId, username)
+    async deleteNote(noteId, username) {
+      const status = await deleteNote(noteId, username)
+      if (status === 204) {
+        this.notes = this.notes.filter((note) => note.id !== noteId)
+      }
+      else if (status === 500) {
+        console.log("Could not connect to server")
+      }
+      else if (status === 401) {
+        console.log("Unauthorised")
+      }
+      else {
+        console.log("Could not delete note. Status: " + status)
+      }
     }
   }
 

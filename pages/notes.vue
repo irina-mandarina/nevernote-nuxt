@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <div>
+    <div class="">
         <NuxtLayout name="default">
             <NoteList />
         </NuxtLayout>

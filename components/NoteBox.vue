@@ -33,7 +33,7 @@
             content: newContent.value,
             date
         }
-        console.log(editedNote)
+        // console.log(editedNote)
         notesStore.editing.set(editedNote.id, false)
         notesStore.editNote(username, editedNote)
     }
