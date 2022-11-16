@@ -15,4 +15,12 @@ export default defineNuxtConfig ({
     ],
     '@nuxtjs/tailwindcss'
   ],
+  plugins: [
+    {src: '~/plugins/Vuelidate'}
+  ],
+  // build: {
+  //   vendor: [
+  //     'vuelidate'
+  //   ]
+  // }
 })

@@ -40,16 +40,20 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async getUserDetails(username) {
-      const details = await userDetails(username)
-      if (details === null) {
-        console.log("Could not get user details")
-      }
-      else {
+      const {details, status} = await userDetails(username)
+      if (status === 200) {
         this.name = details.name
         this.age = details.age
         this.address = details.address
         this.bio = details.bio
       }
+      else if (status === 401) {
+        console.log("UnUTHORISED")
+      }
+      else if (status === 500) {
+        console.log("Could not connect to server")
+      }
+      return status
     },
 
     async logOut(username) {

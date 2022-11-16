@@ -57,7 +57,7 @@
             </button>
         </div>
 
-        <div v-if="!notesStore.editing.get(id)" @click="$emit('showNote', id)" v-bind:id="'notebox'+id" >
+        <div v-if="!notesStore.editing.get(id)" @click="$emit('showNote', id)" v-bind:id="'notebox'+id" class="h-full">
             <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ title }}  </h3>
             <p class="pb-2 text-xs float-left italic font-josefin-slab text-violet-800 flex w-full ml-0 mb-2">
                 {{ date }}

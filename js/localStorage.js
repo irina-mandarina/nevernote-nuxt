@@ -30,3 +30,17 @@ export function LSLogOut(username) {
     }
     localStorage.removeItem("logged")
 }
+
+export function LSGetToken() {
+    if (typeof window !== 'undefined')
+    return localStorage.getItem('jwt')
+}
+
+export function LSSetToken(token) {
+    try {
+        localStorage.setItem("jwt", token)
+    }
+    catch (e) {
+        console.log(e)
+    }
+}

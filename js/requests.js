@@ -1,9 +1,11 @@
+import { LSGetToken, LSSetToken } from "./localStorage"
 export async function getNotes(username) {
     const notes = await fetch ('http://localhost:5173/notes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            username
+            username,
+            'Authorization': 'Bearer ' + LSGetToken(),
         }
     })
         .then((response) => response.json())
@@ -28,13 +30,15 @@ export async function addNote(username, title, content) {
         body: JSON.stringify(requestBody),
         headers: {
             'Content-Type': 'application/json',
-            username
+            username,
+            'Authorization': 'Bearer ' + LSGetToken(),
         }
     })
         .then((response) => copy = response.clone())
         .then((response) => response.json())
         .catch((error) => {
             console.log(error)
+            copy = {status: 'ERR_FAILED'}
         })
     // return response.status === 201
     return {response, status: copy.status}
@@ -45,6 +49,7 @@ export async function deleteNote(id, username) {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + LSGetToken(),
             username
         }
     })
@@ -69,6 +74,7 @@ export async function editNote(id, username, title, content) {
         headers: {
             "Content-type": "application/json",
             "Accept": "application/json, text/plain, */*",
+            'Authorization': 'Bearer ' + LSGetToken(),
             username
         }
     })
@@ -115,7 +121,7 @@ export async function logIn(username, password) {
         body: JSON.stringify(requestBody),
         headers: {
             "Content-type": "application/json",
-            "Accept": "application/json, */*"
+            "Accept": "application/json, */*",
         }
     })
     return response.status
@@ -127,6 +133,7 @@ export async function logOut(username) {
         headers: {
             "Content-type": "application/json",
             "Accept": "application/json, */*",
+            'Authorization': 'Bearer ' + LSGetToken(),
             username
         }
     })
@@ -136,20 +143,36 @@ export async function logOut(username) {
 }
 
 export async function userDetails(username) {
+    let copy
     const details = await fetch ('http://localhost:5173/profile/details', {
         method: 'GET',
         headers: {
             "Content-type": "application/json",
             "Accept": "application/json, */*",
+            'Authorization': 'Bearer ' + LSGetToken(),
             username
         }
     })
+        .then((response) => copy = response.clone())
         .then((response) => response.json())
         .then((response) => JSON.parse(JSON.stringify(response)))
         .catch((error) => {
             console.log(error)
+            copy = {status: 'ERR_FAILED'}
         })
-    return details
+    return {details, status: copy.status}
+    // const details = await fetch ('http://localhost:5173/profile/details', {
+    //     method: 'GET',
+    //     headers: {
+    //         "Content-type": "application/json",
+    //         "Accept": "application/json, */*",
+    //         username
+    //     }
+    // })
+    // // let copy = await details.clone()
+    // let j = await details.json()
+    // debugger
+    // return {details: j, status: details.status}
 }
 
 export async function setBio(username, bio) {
@@ -160,6 +183,7 @@ export async function setBio(username, bio) {
         headers: {
             "Content-type": "application/json",
             "Accept": "application/json, */*",
+            'Authorization': 'Bearer ' + LSGetToken(),
             username
         }
     })

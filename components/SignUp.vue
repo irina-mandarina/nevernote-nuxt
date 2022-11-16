@@ -1,6 +1,6 @@
 <script setup>
     import { useUserStore } from '~~/store/UserStore'
-    // import v$ from '~~/vuelidate/vuelidate.js'
+    import v$ from '~~/vuelidate/vuelidate.js'
 
     const userStore = useUserStore()
     
@@ -25,8 +25,8 @@
                     <input v-model="name" type="text" id="name" class="block py-2.5 px-2 w-2/3 text-sm text-gray-900 bg-transparent border-0 border-b-2 rounded-xl border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-violet-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer mx-auto py-4" placeholder=" " />
                     <label for="name" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-3 -z-10 origin-[0] peer-focus:left-36 peer-focus:text-violet-600 peer-focus:dark:text-violet-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Name</label>
                 </div>
-
-                <!-- <div :class="{ error: v$.age.$errors.length }" class="relative mx-auto z-0 my-8">
+<!-- 
+                <div :class="{ error: v$.age.$errors.length }" class="relative mx-auto z-0 my-8">
                     <input v-model="v$.age.$model" type="number" id="age" class="block py-2.5 px-0 w-1/3 text-sm text-gray-900 bg-transparent border-0 border-b-2 rounded-xl border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-violet-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer mx-auto py-4" placeholder=" " />
                     <label for="age" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-3 -z-10 origin-[0] peer-focus:left-36 peer-focus:text-violet-600 peer-focus:dark:text-violet-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Age</label>
                     <div class="" v-for="(error, index) in v$.age.$errors" :key="index">

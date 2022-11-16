@@ -1,6 +1,6 @@
 // import { reactive, computed } from 'vue'
-// import { Vuelidate } from 'Vuelidate'
-// // import { minValue, required } from 'VuelidateValidators'
+// import { useVuelidate } from '@vuelidate/core'
+// import { minValue, required } from '@vuelidate/validators'
 
 // const state = reactive({
 //     username: null,
@@ -14,6 +14,6 @@
 //     age: {required, minLength: minValue(16) }
 // }
 
-// const v$ = Vuelidate(rules, state)
+// const v$ = useVuelidate(rules, state)
 
 // export default v$

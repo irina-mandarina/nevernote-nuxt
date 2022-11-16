@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, watch, defineEmits } from 'vue'
+    import { computed } from 'vue'
     import { useNotesStore } from '~~/store/NotesStore'
     import { useUserStore } from '~~/store/UserStore'
     const emit = defineEmits(['closeNote']); 
