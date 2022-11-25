@@ -1,9 +1,7 @@
 <script setup>
     import { useUserStore } from '~~/store/UserStore'
-    import v$ from '~~/vuelidate/vuelidate.js'
 
     const userStore = useUserStore()
-    
     const username = ref(null)
     const password = ref(null)
     const name = ref(null)

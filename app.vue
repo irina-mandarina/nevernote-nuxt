@@ -1,13 +1,3 @@
-<script setup>
-  import { createAuth0 } from '@auth0/auth0-vue'
-  
-  // createAuth0({
-    // domain: "dev-vnwxm6hjksh0tszk.us.auth0.com",
-    // client_id: "1ZO8OlfazmYW7w3c2VMtBnzVxDFYmb78",
-    // redirect_uri: window.location.origin
-  // })
-</script>
-
 <template>
   <div>
     <Head>

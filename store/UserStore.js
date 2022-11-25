@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia' // '@pinia/nuxt'
-import { LSLogOut, LSSetLogged } from '~~/js/localStorage'
+import { defineStore } from 'pinia'
+import { LSLogOut, LSSetLogged, LSSetToken } from '~~/js/localStorage'
 import { logIn, logOut, register, userDetails, setBio } from '~~/js/requests'
 
 export const useUserStore = defineStore('userStore', {
@@ -20,11 +20,12 @@ export const useUserStore = defineStore('userStore', {
       await register(user.username, user.password, user.name, user.address, user.age)
       this.password = password
       this.logIn(username)
+      navigateTo('/notes')
     },
 
     async requestLogIn(username, password) {
-        const authorised = await logIn(username, password)
-        if (authorised) {
+        const status = await logIn(username, password)
+        if (status === 200) {
           this.logIn(username)
         }
         else {
@@ -36,7 +37,6 @@ export const useUserStore = defineStore('userStore', {
       this.username = username
       this.logged = true
       LSSetLogged(username)
-      // navigateTo('/notes')
     },
 
     async getUserDetails(username) {
@@ -59,6 +59,7 @@ export const useUserStore = defineStore('userStore', {
     async logOut(username) {
       await logOut(username)
       LSLogOut(username)
+      LSSetToken("")
       this.logged = false
       navigateTo('/')
     },

@@ -6,21 +6,11 @@ export default defineNuxtConfig ({
       '@pinia/nuxt',
       {
         autoImports: [
-          // automatically imports `defineStore`
-          'defineStore', // import { defineStore } from 'pinia'
-          // automatically imports `defineStore` as `definePiniaStore`
-          ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+          'defineStore',
+          ['defineStore', 'definePiniaStore'],
         ],
       },
     ],
     '@nuxtjs/tailwindcss'
   ],
-  plugins: [
-    {src: '~/plugins/Vuelidate'}
-  ],
-  // build: {
-  //   vendor: [
-  //     'vuelidate'
-  //   ]
-  // }
 })

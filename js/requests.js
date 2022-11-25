@@ -1,4 +1,5 @@
 import { LSGetToken, LSSetToken } from "./localStorage"
+
 export async function getNotes(username) {
     const notes = await fetch ('http://localhost:5173/notes', {
         method: 'GET',
@@ -40,6 +41,7 @@ export async function addNote(username, title, content) {
             console.log(error)
             copy = {status: 'ERR_FAILED'}
         })
+        console.log(response)
     // return response.status === 201
     return {response, status: copy.status}
 }
@@ -53,10 +55,6 @@ export async function deleteNote(id, username) {
             username
         }
     })
-        // .then((response) => response.text())
-        // .then((data) => {
-        //     console.log(data)
-        // })
         .catch((error) => {
             console.log(error)
         })
@@ -78,14 +76,9 @@ export async function editNote(id, username, title, content) {
             username
         }
     })
-        // .then((response) => response.json())
-        // .then((data) => {
-        //     console.log(data)
-        // })
         .catch((error) => {
             console.log(error)
         })
-        // console.log(response.status)
     return response.status
 }
 
@@ -97,6 +90,7 @@ export async function register(username, password, name, address, age) {
         age,
         address
     }
+    let copy
     const response = await fetch ('http://localhost:5173/auth/register', {
         method: 'POST',
         body: JSON.stringify(requestBody),
@@ -105,10 +99,13 @@ export async function register(username, password, name, address, age) {
             "Accept": "application/json, */*"
         }
     })
+        .then((response) => copy = response.clone())
+        .then (response => response.text())
         .catch((error) => {
             console.log(error)
         })
-    return response.status
+    LSSetToken(response)
+    return copy.status
 }
 
 export async function logIn(username, password) {
@@ -116,6 +113,7 @@ export async function logIn(username, password) {
         username,
         password
     }
+    let copy
     const response = await fetch ('http://localhost:5173/auth/login', {
         method: 'POST',
         body: JSON.stringify(requestBody),
@@ -124,7 +122,10 @@ export async function logIn(username, password) {
             "Accept": "application/json, */*",
         }
     })
-    return response.status
+        .then((response) => copy = response.clone())
+        .then (response => response.text())
+        LSSetToken(response)
+    return copy.status
 }
 
 export async function logOut(username) {
@@ -161,18 +162,6 @@ export async function userDetails(username) {
             copy = {status: 'ERR_FAILED'}
         })
     return {details, status: copy.status}
-    // const details = await fetch ('http://localhost:5173/profile/details', {
-    //     method: 'GET',
-    //     headers: {
-    //         "Content-type": "application/json",
-    //         "Accept": "application/json, */*",
-    //         username
-    //     }
-    // })
-    // // let copy = await details.clone()
-    // let j = await details.json()
-    // debugger
-    // return {details: j, status: details.status}
 }
 
 export async function setBio(username, bio) {
