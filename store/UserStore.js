@@ -57,11 +57,13 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async logOut(username) {
-      await logOut(username)
-      LSLogOut(username)
-      LSSetToken("")
-      this.logged = false
-      navigateTo('/')
+      const status = await logOut(this.username)
+      if (status === 204 && status === 401) {
+        LSLogOut(username)
+        LSSetToken("")
+        this.logged = false
+        navigateTo('/')
+      }
     },
 
     editBio(username, newBio) {

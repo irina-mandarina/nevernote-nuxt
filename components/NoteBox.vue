@@ -46,7 +46,7 @@
 <template>
     <div v-bind:id="'note' + id" class="inline-block w-1/4 h-80 bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
         <div class="relative w-fit float-right">
-            <button @click="notesStore.deleteNote(id, this.username)"
+            <button @click="notesStore.deleteNote(id, username)"
                 class="flex p-0 m-0 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
                 >
                 x

@@ -1,3 +1,43 @@
+<script setup>
+  import axios from 'axios'
+  import useUserStore from '~~/store/UserStore'
+
+  axios.interceptors.request.use(function (config) {
+    //console.log(config)
+    return config;
+  }, function (error) {
+    console.log(error)
+    if (error.request.status === 0) {
+      console.log("CORS error")
+    }
+    else if (error.request.status === 401) {
+      console.log("Unauthorised")
+      
+      const userStore = useUserStore()
+      userStore.logOut()
+      navigateTo("/login")
+    }
+    return Promise.reject(error);
+  });
+
+  axios.interceptors.response.use(function (response) {
+    //console.log(response)
+    return response;
+  }, function (error) {
+    console.log(error)
+    if (error.request.status === 0) {
+      console.log("CORS error")
+    }
+    else if (error.request.status === 401) {
+      console.log("Unauthorised")
+      
+      const userStore = useUserStore()
+      userStore.logOut()
+      navigateTo("/login")
+    }
+    return Promise.reject(error);
+  });
+</script>
 <template>
   <div>
     <Head>
