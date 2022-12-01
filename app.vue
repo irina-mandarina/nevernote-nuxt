@@ -1,22 +1,13 @@
 <script setup>
   import axios from 'axios'
-  import useUserStore from '~~/store/UserStore'
+  import { useUserStore } from '~~/store/UserStore'
+  import { LSLogOut } from '~~/js/localStorage' 
 
   axios.interceptors.request.use(function (config) {
     //console.log(config)
     return config;
   }, function (error) {
-    console.log(error)
-    if (error.request.status === 0) {
-      console.log("CORS error")
-    }
-    else if (error.request.status === 401) {
-      console.log("Unauthorised")
-      
-      const userStore = useUserStore()
-      userStore.logOut()
-      navigateTo("/login")
-    }
+    displayError(error)
     return Promise.reject(error);
   });
 
@@ -24,43 +15,54 @@
     //console.log(response)
     return response;
   }, function (error) {
+    if(!error.request.responseURL.endsWith('/logout'))
+      displayError(error)
+    return Promise.reject(error)
+  })
+
+  function displayError(error) {
     console.log(error)
     if (error.request.status === 0) {
       console.log("CORS error")
     }
     else if (error.request.status === 401) {
-      console.log("Unauthorised")
-      
       const userStore = useUserStore()
       userStore.logOut()
+      toastr.error("Unauthorised")
       navigateTo("/login")
     }
-    return Promise.reject(error);
-  });
+    else if (error.code === "ERR_NETWORK") {
+      console.log("Cannot connect to server")
+    }
+  }
 </script>
 <template>
   <div>
     <Head>
-      <!-- <Script src="https://cdn.jsdelivr.net/npm/vue-demi"></Script>
-      <Script src="https://cdn.jsdelivr.net/npm/@vuelidate/core"></Script>
-      <Script src="https://cdn.jsdelivr.net/npm/@vuelidate/validators"></Script> -->
       <Link href="https://unpkg.com/pattern.css" rel="stylesheet" />
-      <Link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+      <Link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
       <Link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lora" />
       <Link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Josefin+Slab" />
       <Link href="https://fonts.cdnfonts.com/css/marmelad" rel="stylesheet" />
       <Link href='https://fonts.googleapis.com/css?family=Frank Ruhl Libre' rel='stylesheet' />
       <Link href='https://fonts.googleapis.com/css?family=Overpass' rel='stylesheet' />
+
+      <Script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>
+      <Link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></Script>
     </Head>
     
       <NuxtPage />
-      
+    
   </div>
 </template>
 <style>
   body {
     width: 100%;
     height: 100%;
+    background-color: #1f2937;
     font-family: Overpass;
   }
 

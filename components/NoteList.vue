@@ -39,9 +39,9 @@
             <p class="text-gray-300 font-frank font-medium text-5xl">Wellcome, {{ name }}!</p>
         </div>
 
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap justify-evenly">
             <NoteAdder />
-            <NoteBox v-for="note in notes" :id="note.id" :title="note.title" :content="note.content" :date="note.date" @show-note="showNote" />
+            <NoteBox v-for="note in notes" :id="note.id" :title="note.title" :content="note.content" :date="note.date" :deadline="note.deadline" @show-note="showNote" />
         </div>
     </div>
 </template>

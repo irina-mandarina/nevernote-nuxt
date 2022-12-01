@@ -31,6 +31,7 @@ export const useUserStore = defineStore('userStore', {
         else {
           console.log("Wrong password")
         }
+        return status === 200
     },
 
     async logIn(username) {
@@ -56,9 +57,17 @@ export const useUserStore = defineStore('userStore', {
       return status
     },
 
+
     async logOut(username) {
+      if (!username) {
+        LSLogOut(username)
+        LSSetToken("")
+        this.logged = false
+        navigateTo('/login')
+        return
+      }
       const status = await logOut(this.username)
-      if (status === 204 && status === 401) {
+      if (status === 204 || status === 401 || status === undefined) {
         LSLogOut(username)
         LSSetToken("")
         this.logged = false

@@ -7,7 +7,9 @@
     let password = ref(null)
 
     async function logIn() {
-        await userStore.requestLogIn(username.value, password.value)
+        if (await userStore.requestLogIn(username.value, password.value)) {
+            navigateTo("/notes")
+        }
     }
 </script>
 <template>

@@ -1,23 +1,35 @@
 import { defineStore } from 'pinia'
-import { addNote, editNote, getNotes, deleteNote } from '~~/js/requests'
+import { addNote, editNote, getNotes, deleteNote, completeTask } from '~~/js/requests'
+import { useUserStore } from './UserStore'
 
 export const useNotesStore = defineStore('notesStore', {
   state: () => {
     return {
         notes: [],
         bigNoteId: -1,
-        editing: null
+        editing: null,
+        noteType: "ALL",
     }
   },
 
   actions: {
     async getNotes(username) {
-      const {notes, status} = await getNotes(username)
+      const {notes, status} = await getNotes(username, this.noteType)
       if (status === 200) {
         this.notes = notes
       }
       this.editing = new Map()
       this.fillEditing()
+    },
+
+    setNoteType(type) {
+      if (!(["ALL", "NOTES", "TASKS", "TODO", "COMPLETED"].includes(type))) {
+        this.noteType = "ALL"
+      }
+      else {
+        this.noteType = type
+      }
+      this.getNotes(useUserStore().username, this.noteType)
     },
 
     fillEditing() {
@@ -26,8 +38,8 @@ export const useNotesStore = defineStore('notesStore', {
       }
     },
 
-    async addNote(username, title, content) {
-      const {note, status} = await addNote(username, title, content)
+    async addNote(username, title, content, deadline) {
+      const {note, status} = await addNote(username, title, content, deadline)
       if (status === 201) { 
         let today = new Date()
         let date = today.getFullYear() + '.'+ (today.getMonth()+1) + '.' + today.getDate()
@@ -47,7 +59,6 @@ export const useNotesStore = defineStore('notesStore', {
     },
 
     async editNote(username, editedNote) {
-      console.log(username)
       const status = await editNote(editedNote.id, username, editedNote.title, editedNote.content)
       if (status === 201) {
         for(let i = 0; i < this.notes.length; i++) {
@@ -64,6 +75,14 @@ export const useNotesStore = defineStore('notesStore', {
       }
       else {
         console.log("Could not edit note: " + editedNote.title + ". Status: " + status)
+      }
+    },
+
+    async completeTask(username, id) {
+      const {status, note} = await completeTask(username, id)
+      if (status === 200) {
+        toastr.success("You completed a task!")
+        this.notes.filter(it => it.id !== note.id).at(0) = note
       }
     },
 

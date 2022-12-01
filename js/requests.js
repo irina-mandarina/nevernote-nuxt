@@ -1,8 +1,8 @@
 import { LSGetToken, LSSetToken } from "./localStorage"
 import axios from 'axios'
 
-export async function getNotes(username) {
-    const response = await axios.get("http://localhost:5173/notes",
+export async function getNotes(username, noteType) {
+    const response = await axios.get("http://localhost:5173/notes/" + noteType,
         {
             headers: {
                 'Content-Type': 'application/json',
@@ -17,11 +17,12 @@ export async function getNotes(username) {
     return {notes: response.data.getNotes, status: response.status}
 }
 
-export async function addNote(username, title, content) {
+export async function addNote(username, title, content, deadline) {
     const response = await axios.post("http://localhost:5173/notes", 
         {
             title,
-            content
+            content,
+            deadline
         }, 
         {
             headers: {
@@ -47,20 +48,14 @@ export async function deleteNote(id, username) {
             }
         }
     )
-        // .then(function (response) {
-        //     return response.status
-        // })
         .catch(function (error) {
             console.log(error);
         })
-        // .then(function () {
-        //     return 404
-        // })
     return response.status
 }
 
 export async function editNote(id, username, title, content) {
-    const response = await axios.put("http://localhost:5173/notes", 
+    const response = await axios.put("http://localhost:5173/notes/" + id, 
         {
             title,
             content
@@ -82,6 +77,24 @@ export async function editNote(id, username, title, content) {
         // .then(function () {
         //     return 404
         // })
+    return response.status
+}
+
+
+export async function completeTask(username, id) {
+    const response = await axios.put("http://localhost:5173/tasks/" + id, 
+        {}, 
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                username,
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+        .catch(function (error) {
+            console.log(error);
+        })
     return response.status
 }
 
@@ -126,34 +139,30 @@ export async function logIn(username, password) {
             }
         }
     )
-        // .then(function (response) {
-        //     return response.status
-        // })
         .catch(function (error) {
             console.log(error);
         })
-        // .then(function () {
-        //     return 404
-        // })
     LSSetToken(response.data)
     return response.status
 }
 
 export async function logOut(username) {
-    const response = await axios.post("http://localhost:5173/auth/logout",
-        {},
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                username,
-                'Authorization': 'Bearer ' + LSGetToken(),
+    try {
+        const response = await axios.post("http://localhost:5173/auth/logout",
+            {},
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    username,
+                    'Authorization': 'Bearer ' + LSGetToken(),
+                }
             }
-        }
-    )
-        .catch(function (error) {
-            console.log(error);
-        })
-    return response.status
+        )
+        return response.status
+    } catch(error) {
+        console.log(error);
+        throw error
+    }
 }
 
 export async function userDetails(username) {
