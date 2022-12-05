@@ -41,7 +41,7 @@
 
         <div class="flex flex-wrap justify-evenly">
             <NoteAdder />
-            <NoteBox v-for="note in notes" :id="note.id" :title="note.title" :content="note.content" :date="note.date" :deadline="note.deadline" @show-note="showNote" />
+            <NoteBox v-for="note in notes" :id="note.id" @show-note="showNote" />
         </div>
     </div>
 </template>

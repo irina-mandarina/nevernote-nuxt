@@ -2,16 +2,20 @@
     import { computed } from 'vue'
     import { useNotesStore } from '~~/store/NotesStore'
     import { useUserStore } from '~~/store/UserStore'
-    const emit = defineEmits(['closeNote']); 
+
+    const emit = defineEmits(['closeNote']);
 
     const notesStore = useNotesStore()
     const userStore = useUserStore()
     const username = computed(() => userStore.username).value
     const id = computed(() => notesStore.bigNoteId).value
-
+    
     let title = computed(() => notesStore.notes.filter((note) => id === note.id)[0].title)
     let date = computed(() => notesStore.notes.filter((note) => id === note.id)[0].date)
     let content = computed(() => notesStore.notes.filter((note) => id === note.id)[0].content)
+    let deadline = computed(() => notesStore.notes.filter((note) => id === note.id)[0].deadline)
+    let privacy = computed(() => notesStore.notes.filter((note) => id === note.id)[0].privacy)
+    
     let newTitle = ref(null)
     let newContent = ref(null)
     let editingBigNote = ref(false)
@@ -57,6 +61,13 @@
                 >
                 <p class="text-xs pt-1 px-2">Close note</p>
                 x
+            </button>
+            <br />
+            <button @click="notesStore.togglePrivacy(username, id)"
+                class="flex p-0 m-0 mt-1 bg-transparent text-fuchsia-800 duration-700 hover:text-violet-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
+                >
+                <i v-if="privacy === 'PRIVATE'" class="fa fa-lock" aria-hidden="true"></i>
+                <i v-if="privacy === 'PUBLIC'" class="fa fa-unlock" aria-hidden="true"></i>
             </button>
             <br/>
             <button @click="allowEdit()" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">

@@ -36,7 +36,7 @@
         
         document.querySelector("#savebiobtn").classList.remove("block")
         document.querySelector("#savebiobtn").classList.add("hidden")
-        userStore.editBio(username.value, newBio.value)
+        userStore.editBio(newBio.value)
     }
     
 </script>

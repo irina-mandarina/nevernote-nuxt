@@ -40,8 +40,8 @@ export const useUserStore = defineStore('userStore', {
       LSSetLogged(username)
     },
 
-    async getUserDetails(username) {
-      const {details, status} = await userDetails(username)
+    async getUserDetails() {
+      const {details, status} = await userDetails()
       if (status === 200) {
         this.name = details.name
         this.age = details.age
@@ -58,7 +58,7 @@ export const useUserStore = defineStore('userStore', {
     },
 
 
-    async logOut(username) {
+    async logOut() {
       if (!username) {
         LSLogOut(username)
         LSSetToken("")
@@ -66,7 +66,7 @@ export const useUserStore = defineStore('userStore', {
         navigateTo('/login')
         return
       }
-      const status = await logOut(this.username)
+      const status = await logOut()
       if (status === 204 || status === 401 || status === undefined) {
         LSLogOut(username)
         LSSetToken("")
@@ -75,8 +75,8 @@ export const useUserStore = defineStore('userStore', {
       }
     },
 
-    editBio(username, newBio) {
-      if (setBio(username, newBio)) {
+    editBio(newBio) {
+      if (setBio(newBio)) {
         this.bio = newBio
       }
       else {

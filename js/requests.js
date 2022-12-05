@@ -1,13 +1,15 @@
 import { LSGetToken, LSSetToken } from "./localStorage"
 import axios from 'axios'
 
-export async function getNotes(username, noteType) {
-    const response = await axios.get("http://localhost:5173/notes/" + noteType,
+export async function getNotes(noteType) {
+    const response = await axios.get("http://localhost:5173/notes",
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
+            },
+            params: {
+                noteType
             }
         }
     )
@@ -17,17 +19,32 @@ export async function getNotes(username, noteType) {
     return {notes: response.data.getNotes, status: response.status}
 }
 
-export async function addNote(username, title, content, deadline) {
+export async function getNote(id) {
+    const response = await axios.get("http://localhost:5173/notes/" + id,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+        .catch(function (error) {
+            console.log(error);
+        })
+    return {notes: response.data.getNote, status: response.status}
+}
+
+export async function addNote(title, content, deadline, privacy) {
     const response = await axios.post("http://localhost:5173/notes", 
         {
             title,
             content,
-            deadline
+            deadline,
+            privacy
         }, 
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
             }
         }
@@ -38,12 +55,11 @@ export async function addNote(username, title, content, deadline) {
     return {note: response.data, status: response.status}
 }
 
-export async function deleteNote(id, username) {
+export async function deleteNote(id) {
     const response = await axios.delete("http://localhost:5173/notes/" + id, 
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
             }
         }
@@ -54,7 +70,7 @@ export async function deleteNote(id, username) {
     return response.status
 }
 
-export async function editNote(id, username, title, content) {
+export async function editNote(id, title, content) {
     const response = await axios.put("http://localhost:5173/notes/" + id, 
         {
             title,
@@ -63,31 +79,23 @@ export async function editNote(id, username, title, content) {
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
             }
         }
     )
-        // .then(function (response) {
-        //     return response
-        // })
         .catch(function (error) {
             console.log(error);
         })
-        // .then(function () {
-        //     return 404
-        // })
     return response.status
 }
 
 
-export async function completeTask(username, id) {
-    const response = await axios.put("http://localhost:5173/tasks/" + id, 
+export async function completeTask(id) {
+    const response = await axios.put("http://localhost:5173/notes/" + id + "/completed", 
         {}, 
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
             }
         }
@@ -95,7 +103,23 @@ export async function completeTask(username, id) {
         .catch(function (error) {
             console.log(error);
         })
-    return response.status
+    return {status: response.status, note: response.data}
+}
+
+export async function togglePrivacy(id) {
+    const response = await axios.put("http://localhost:5173/notes/" + id + "/privacy", 
+        {}, 
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+        .catch(function (error) {
+            console.log(error);
+        })
+    return {status: response.status, note: response.data}
 }
 
 export async function register(username, password, name, address, age) {
@@ -110,7 +134,6 @@ export async function register(username, password, name, address, age) {
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
             }
         }
     )
@@ -135,7 +158,6 @@ export async function logIn(username, password) {
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
             }
         }
     )
@@ -153,7 +175,6 @@ export async function logOut(username) {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    username,
                     'Authorization': 'Bearer ' + LSGetToken(),
                 }
             }
@@ -165,12 +186,11 @@ export async function logOut(username) {
     }
 }
 
-export async function userDetails(username) {
+export async function userDetails() {
     const response = await axios.get("http://localhost:5173/profile/details",
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
             }
         }
@@ -181,13 +201,12 @@ export async function userDetails(username) {
     return {details: response.data, status: response.status}
 }
 
-export async function setBio(username, bio) {
+export async function setBio(bio) {
     const response = await axios.put("http://localhost:5173/profile/set-bio",
         bio,
         {
             headers: {
                 'Content-Type': 'application/json',
-                username,
                 'Authorization': 'Bearer ' + LSGetToken(),
             }
         }

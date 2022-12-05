@@ -1,24 +1,24 @@
 <script setup>
     import { ref, computed } from 'vue'
     import { useNotesStore } from '~~/store/NotesStore'
-    import { useUserStore } from '~~/store/UserStore'
 
     const notesStore = useNotesStore()
-    const userStore = useUserStore()
-    const username = computed(() => userStore.username).value
 
     let newTitle = ref("")
     let newContent = ref("")
     let newDeadline = ref(null)
 
-    defineProps({
-        id: Number,
-        title: String,
-        content: String,
-        date: String,
-        deadline: String,
-        completed: Boolean
+    const props = defineProps({
+        id: Number
     })
+    
+    let id = ref(props.id)
+    let title = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].title)
+    let date = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].date)
+    let content = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].content)
+    let deadline = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].deadline)
+    let privacy = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].privacy)
+    let completed = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].completed)
 
 
     function allowEdit(id, title, content) {
@@ -39,7 +39,7 @@
         }
         // console.log(editedNote)
         notesStore.editing.set(editedNote.id, false)
-        notesStore.editNote(username, editedNote)
+        notesStore.editNote(editedNote)
     }
 
     function cancelEdit(id) {
@@ -51,21 +51,28 @@
     <div v-bind:id="'note' + id" class="inline-block w-1/4 bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
         <!-- Side menu -->
         <div class="relative w-fit float-right">
-            <button @click="notesStore.deleteNote(id, username)"
-                class="flex p-0 m-0 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
+            <button @click="notesStore.deleteNote(id)"
+                class="flex p-0 m-0 mr-1 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
                 >
-                x
+                x 
+            </button>
+            <br />
+            <button @click="notesStore.togglePrivacy(id)"
+                class="flex p-0 m-0 mt-1 bg-transparent text-fuchsia-800 duration-700 hover:text-violet-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
+                >
+                <i v-if="privacy === 'PRIVATE'" class="fa fa-lock" aria-hidden="true"></i>
+                <i v-if="privacy === 'PUBLIC'" class="fa fa-unlock" aria-hidden="true"></i>
             </button>
             <br />
             <button @click="allowEdit(id, title, content)" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                 <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
             </button>
-            <br />
-            <button @click="notesStore.completeTask(username, id)" v-if="(deadline !== undefined)" class="bg-gray-500 rounded-full float-right mt-2 w-5 h-5 text-center hover:bg-gray-600 duration-300 focus:outline-0 focus:border-0">
-                <i v-if="completed" class="fa fa-check text-xs p-1" aria-hidden="true"></i>
+        </div>
+        <div class="relative w-fit float-left">
+            <button @click="notesStore.completeTask(id)" v-if="(deadline !== undefined && deadline !== null)" class="bg-gray-700 rounded-full float-right mt-2 w-5 h-5 text-center hover:bg-gray-600 duration-300 focus:outline-0 focus:border-0">
+                <i v-if="completed" class="fa fa-check text-xs text-indigo-300 bold p-1 align-middle" aria-hidden="true"></i>
             </button>
         </div>
-
         <!-- Note info -->
         <div v-if="!notesStore.editing.get(id)" @click="$emit('showNote', id)" v-bind:id="'notebox'+id" class="h-full">
             <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ title }}  </h3>
@@ -103,5 +110,4 @@
         -webkit-line-clamp: 7;
         -webkit-box-orient: vertical;  
     }
-
 </style>

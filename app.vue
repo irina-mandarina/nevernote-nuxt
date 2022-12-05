@@ -22,7 +22,7 @@
 
   function displayError(error) {
     console.log(error)
-    if (error.request.status === 0) {
+    if (error.message === "cors???") {
       console.log("CORS error")
     }
     else if (error.request.status === 401) {
@@ -32,7 +32,8 @@
       navigateTo("/login")
     }
     else if (error.code === "ERR_NETWORK") {
-      console.log("Cannot connect to server")
+      toastr.error("Cannot connect to server")
+      navigateTo("/")
     }
   }
 </script>
