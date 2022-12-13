@@ -1,8 +1,8 @@
 <script setup>
   import axios from 'axios'
   import { useUserStore } from '~~/store/UserStore'
-  import { LSLogOut } from '~~/js/localStorage' 
 
+  let userStore = useUserStore()
   axios.interceptors.request.use(function (config) {
     //console.log(config)
     return config;
@@ -33,7 +33,7 @@
     }
     else if (error.code === "ERR_NETWORK") {
       toastr.error("Cannot connect to server")
-      navigateTo("/")
+      userStore.server = false
     }
   }
 </script>

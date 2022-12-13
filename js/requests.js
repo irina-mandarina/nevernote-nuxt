@@ -13,9 +13,6 @@ export async function getNotes(noteType) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return {notes: response.data.getNotes, status: response.status}
 }
 
@@ -28,10 +25,7 @@ export async function getNote(id) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
-    return {notes: response.data.getNote, status: response.status}
+    return {note: response.data, status: response.status}
 }
 
 export async function addNote(title, content, deadline, privacy) {
@@ -49,9 +43,6 @@ export async function addNote(title, content, deadline, privacy) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return {note: response.data, status: response.status}
 }
 
@@ -64,9 +55,6 @@ export async function deleteNote(id) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return response.status
 }
 
@@ -83,9 +71,6 @@ export async function editNote(id, title, content) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return response.status
 }
 
@@ -100,9 +85,6 @@ export async function completeTask(id) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return {status: response.status, note: response.data}
 }
 
@@ -116,9 +98,6 @@ export async function togglePrivacy(id) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return {status: response.status, note: response.data}
 }
 
@@ -137,15 +116,6 @@ export async function register(username, password, name, address, age) {
             }
         }
     )
-        // .then(function (response) {
-        //     return response.status
-        // })
-        .catch(function (error) {
-            console.log(error);
-        })
-        // .then(function () {
-        //     return 404
-        // })
     return response.status
 }
 
@@ -161,29 +131,21 @@ export async function logIn(username, password) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     LSSetToken(response.data)
     return response.status
 }
 
 export async function logOut(username) {
-    try {
-        const response = await axios.post("http://localhost:5173/auth/logout",
-            {},
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + LSGetToken(),
-                }
+    const response = await axios.post("http://localhost:5173/auth/logout",
+        {},
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
             }
-        )
-        return response.status
-    } catch(error) {
-        console.log(error);
-        throw error
-    }
+        }
+    )
+    return response.status
 }
 
 export async function userDetails() {
@@ -195,9 +157,6 @@ export async function userDetails() {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return {details: response.data, status: response.status}
 }
 
@@ -211,8 +170,5 @@ export async function setBio(bio) {
             }
         }
     )
-        .catch(function (error) {
-            console.log(error);
-        })
     return response.status
 }

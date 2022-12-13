@@ -18,20 +18,28 @@
                 class="absolute bg-gray-700 rounded-md hover:rounded-md w-36 mt-6">
                 <ul class="w-full">
                     <li class="p-2 border-b border-gray-500 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('NOTES')">
-                        Notes
+                        <NuxtLink to="/notes">
+                            Notes
+                        </NuxtLink>
                     </li>
                     <div class="flex">
                         <li @mouseenter="(showTasksMenu=true)" class="py-2 px-2 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('TASKS')">
-                            Tasks <i class="fa fa-solid fa-chevron-right w-1/6"/>
+                            <NuxtLink to="/notes">
+                                Tasks <i class="fa fa-solid fa-chevron-right w-1/6"/>
+                            </NuxtLink>
                         </li>
                         <div id="tasks-menu" v-if="showTasksMenu" @mouseover="showTasksMenu=true" @mouseleave="(showTasksMenu=false)"  @click="notesStore.setNoteType('TASKS')"
                             class="absolute bg-gray-700 rounded-md w-36 ml-32 mt-0 divide-y divide-solid divide-white">
                             <ul class="w-full">
                                 <li class="p-2 border-b border-gray-500 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('TODO')">
-                                    To do
+                                    <NuxtLink to="/notes">
+                                        To do
+                                    </NuxtLink>
                                 </li>
                                 <li class="p-2 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('COMPLETED')">
-                                    Completed
+                                    <NuxtLink to="/notes">
+                                        Completed
+                                    </NuxtLink>
                                 </li>
                             </ul>
                         </div>

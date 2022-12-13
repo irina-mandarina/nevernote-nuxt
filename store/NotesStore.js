@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { LSGetLogged } from '~~/js/localStorage'
 import { addNote, editNote, getNotes, deleteNote, completeTask, togglePrivacy, getNote } from '~~/js/requests'
 
 export const useNotesStore = defineStore('notesStore', {
@@ -6,28 +7,34 @@ export const useNotesStore = defineStore('notesStore', {
     return {
         notes: [],
         bigNoteId: -1,
-        editing: null,
+        editing: new Map(),
         noteType: "ALL",
     }
   },
 
   actions: {
     async getNotes() {
-      const {notes, status} = await getNotes(this.noteType)
-      if (status === 200) {
-        this.notes = notes
+      let response
+      try {
+        response = await getNotes(this.noteType)
+      } 
+      catch(error) {
+        // delete this later!
+        console.log(error)
+        if (error.response.status === 401) {
+          navigateTo("/login")
+        }
+        else if (error.response.status === 404) {
+          toastr.error("404????")
+        }
+      }
+      if (response.status === 200) {
+        this.notes = response.notes
       }
       this.editing = new Map()
       this.fillEditing()
     },
-
-    async getNote(id) {
-      const {note, status} = await getNote(id)
-      if (status === 200) {
-        return note
-      }
-    },
-
+    
     setNoteType(type) {
       if (!(["ALL", "NOTES", "TASKS", "TODO", "COMPLETED"].includes(type))) {
         this.noteType = "ALL"
@@ -44,14 +51,14 @@ export const useNotesStore = defineStore('notesStore', {
       }
     },
 
-    async addNote( title, content, deadline, privacy) {
+    async addNote(title, content, deadline, privacy) {
       const {note, status} = await addNote(title, content, deadline, privacy)
       if (status === 201) { 
         let today = new Date()
         let date = today.getFullYear() + '.'+ (today.getMonth()+1) + '.' + today.getDate()
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
         let dateTime = date + ' ' + time
-        this.notes.push({id: note.id, title, content, date: dateTime, deadline, privacy})
+        this.notes.push(note)
       }
       else if (status === 500) {
         console.log("Could not connect to server")
@@ -85,26 +92,43 @@ export const useNotesStore = defineStore('notesStore', {
     },
 
     async completeTask(id) {
-      console.log(id)
-      const {status, note} = await completeTask(id)
-      if (status === 200) {
-        if (note.completed === true) {
+      let response = null
+      try {
+        response = await completeTask(id)
+      }
+      catch (error) {
+        if (error.response.status === 404) {
+          toastr.error("Task could not be completed. (404)")
+        }
+      }
+      
+      if (response.status === 200) {
+        if (response.note.completed === true) {
           toastr.success("You completed a task!")
         }
-        this.notes.filter(it => it.id === note.id).at(0).completed = note.completed
+        this.notes.filter(it => it.id === response.note.id).at(0).completed = response.note.completed
       }
     },
     
     async togglePrivacy(id) {
-      const {status, note} = await togglePrivacy(id)
-      if (status === 200) {
-        toastr.info("Note is " + note.privacy)
-        this.notes.filter(it => it.id === note.id).at(0).completed = note.completed
+      let response = null
+      try {
+        response = await togglePrivacy(id)
+      }
+      catch (error) {
+        if (error.response.status === 404) {
+          toastr.error("Privacy could not get changed. (404)")
+        }
+      }
+      
+      if (response.status === 200) {
+        toastr.info("Note is " + response.note.privacy)
+        this.notes.filter(it => it.id === response.note.id).at(0).completed = response.note.completed
       }
     },
 
     async deleteNote(noteId) {
-      const status = await deleteNote(noteId, username)
+      const status = await deleteNote(noteId)
       if (status === 204) {
         this.notes = this.notes.filter((note) => note.id !== noteId)
       }

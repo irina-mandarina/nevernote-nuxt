@@ -11,7 +11,8 @@ export const useUserStore = defineStore('userStore', {
         age: 0,
         address: null,
         bio: null,
-        logged: false
+        logged: false,
+        server: ref(true)
     }
   },
 
@@ -58,7 +59,7 @@ export const useUserStore = defineStore('userStore', {
     },
 
 
-    async logOut() {
+    async logOut(username) {
       if (!username) {
         LSLogOut(username)
         LSSetToken("")

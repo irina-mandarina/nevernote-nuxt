@@ -1,16 +1,33 @@
 <script setup>
     import { useNotesStore } from '~~/store/NotesStore'
+    import { onBeforeMount } from 'vue'
     
-    const route = useRoute()
     const notesStore = useNotesStore()
-    const note = ref( await notesStore.getNote(route.params.noteId))
-    console.log(note.value)
+    const route = useRoute()
+    let note = ref(null)
+    let status = ref(null)
+    onBeforeMount(async () => {
+        try {
+            note, status = await getNote(route.params.noteId)
+        } catch (error) { 
+            if (error.response.status === 403) {
+            note = {title: "403 Forbidden", content: "You do not have access to this note."}
+        }
+        else note = {title: "Not found"}
+        }
+        if (status === 200) {
+            // if (response.note.username === LSGetLogged()) {
+            //   this.editing.set(response.note.id, false)
+            // }
+            note.value = response.data
+        }
+    })
 </script>
 
 <template>
     <div>
         <NuxtLayout name="default">
-            <!-- <NoteBox :id="note.id" :title="note.title" :content="note.content" :date="note.date" :deadline="note.deadline" :completed="note.completed" :privacy="note.privacy"/> -->
+            <NoteBox class="mx-40 my-40" v-if="note !== undefined && note !== null" :note="note" />
         </NuxtLayout>
     </div>
 </template>
