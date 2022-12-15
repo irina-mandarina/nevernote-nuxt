@@ -10,46 +10,43 @@
     const username = computed(() => userStore.username).value
     const id = computed(() => notesStore.bigNoteId).value
     
-    let title = computed(() => notesStore.notes.filter((note) => id === note.id)[0].title)
-    let date = computed(() => notesStore.notes.filter((note) => id === note.id)[0].date)
-    let content = computed(() => notesStore.notes.filter((note) => id === note.id)[0].content)
-    let deadline = computed(() => notesStore.notes.filter((note) => id === note.id)[0].deadline)
-    let privacy = computed(() => notesStore.notes.filter((note) => id === note.id)[0].privacy)
-    let completed = computed(() => notesStore.notes.filter((note) => id.value === note.id)[0].completed)
-    let editable = ref(notesStore.notes.filter((note) => id === note.id)[0].username === userStore.username)
+    let note = computed(() => notesStore.notes.filter((note) => id === note.id)[0])
+    console.log(note.value)
 
     let newTitle = ref(null)
     let newContent = ref(null)
     let editingBigNote = ref(false)
 
     function allowEdit() {
-        newTitle.value = title.value
-        newContent.value = content.value
+        console.log(note.value.content)
+        newTitle.value = note.value.title
+        newContent.value = note.value.content
         notesStore.fillEditing()
         editingBigNote.value = true
     }
 
-    function saveChanges(id, date) {
+    function saveChanges() {
         editingBigNote.value = false
 
         let editedNote = {
             id,
             title: newTitle.value,
+            deadline: note.value.deadline,
+            privacy: note.value.privacy,
             content: newContent.value,
-            date
+            date: note.value.date
         }
         notesStore.editNote(editedNote)
     }
 
-    function cancelEdit(id) {
+    function cancelEdit() {
         editingBigNote.value = false
     }
 
-    function closeNote(id) {
+    function closeNote() {
         if (editingBigNote.value === true) {
             cancelEdit(id)
-        }
-        // this.emit('closeNote', id)
+        } 
         emit('closeNote', id)
     }
 </script>
@@ -57,39 +54,39 @@
 <template>
     <div :id="'big-note' + id" class="w-1/2 h-fit absolute bg-gray-900 rounded-3xl p-8 mx-auto mt-24 sticky shadow-lg text-white">
         <!-- Side menu -->
-        <div v-if="editable">
+        <div>
             <div class="relative w-fit float-right">
-                <button @click="closeNote(id)"
+                <button @click="closeNote()"
                     class="flex p-0 m-0 mr-1 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
                     >
                     x 
                 </button>
                 <br />
-                <button @click="notesStore.togglePrivacy(id)"
+                <button @click="notesStore.togglePrivacy()"
                     class="flex p-0 m-0 mt-1 bg-transparent text-fuchsia-800 duration-700 hover:text-violet-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
                     >
-                    <i v-if="privacy === 'PRIVATE'" class="fa fa-lock" aria-hidden="true"></i>
-                    <i v-if="privacy === 'PUBLIC'" class="fa fa-unlock" aria-hidden="true"></i>
+                    <i v-if="note.privacy === 'PRIVATE'" class="fa fa-lock" aria-hidden="true"></i>
+                    <i v-if="note.privacy === 'PUBLIC'" class="fa fa-unlock" aria-hidden="true"></i>
                 </button>
                 <br />
-                <button @click="allowEdit(id, title, content)" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
+                <button @click="allowEdit()" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                     <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
                 </button>
             </div>
             <div class="relative w-fit float-left">
-                <button @click="notesStore.completeTask(id)" v-if="(deadline !== undefined && deadline !== null)" class="bg-gray-700 rounded-full float-right mt-2 w-5 h-5 text-center hover:bg-gray-600 duration-300 focus:outline-0 focus:border-0">
-                    <i v-if="completed" class="fa fa-check text-xs text-indigo-300 bold p-1 align-middle" aria-hidden="true"></i>
+                <button @click="notesStore.completeTask(id)" v-if="(note.deadline !== undefined && note.deadline !== null)" class="bg-gray-700 rounded-full float-right mt-2 w-5 h-5 text-center hover:bg-gray-600 duration-300 focus:outline-0 focus:border-0">
+                    <i v-if="note.completed" class="fa fa-check text-xs text-indigo-300 bold p-1 align-middle" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
 
         <div v-if="!editingBigNote" :id="'big-notebox'+id" >
-            <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ title }}  </h3>
+            <h3 class="py-4 break-words font-frank text-center text-gray-400">  {{ note.title }}  </h3>
             <p class="pb-2 text-xs float-left italic text-violet-800 flex w-full ml-0 mb-2">
-                {{ date }}
+                {{ note.date }}
             </p>
             <p class="break-words text-left text-gray-400 w-full align-middle line-clamp overflow-hidden"> 
-                {{ content }}
+                {{ note.content }}
             </p>
         </div>
         

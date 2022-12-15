@@ -34,6 +34,7 @@
     else if (error.code === "ERR_NETWORK") {
       toastr.error("Cannot connect to server")
       userStore.server = false
+      navigateTo("/")
     }
   }
 </script>

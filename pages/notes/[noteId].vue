@@ -1,25 +1,23 @@
 <script setup>
-    import { useNotesStore } from '~~/store/NotesStore'
+    import { getNote } from '~~/js/requests'
     import { onBeforeMount } from 'vue'
     
-    const notesStore = useNotesStore()
     const route = useRoute()
     let note = ref(null)
     let status = ref(null)
     onBeforeMount(async () => {
         try {
-            note, status = await getNote(route.params.noteId)
+            note.value, status.value = await getNote(route.params.noteId)
         } catch (error) { 
             if (error.response.status === 403) {
-            note = {title: "403 Forbidden", content: "You do not have access to this note."}
+            note.value = {title: "403 Forbidden", content: "You do not have access to this note."}
         }
-        else note = {title: "Not found"}
+        else note.value = {title: "Not found"}
         }
-        if (status === 200) {
-            // if (response.note.username === LSGetLogged()) {
-            //   this.editing.set(response.note.id, false)
-            // }
-            note.value = response.data
+        if (status.value === 200) {
+            if (note.username === LSGetLogged()) {
+              notesStore.editing.set(note.id, false)
+            }
         }
     })
 </script>

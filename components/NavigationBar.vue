@@ -1,55 +1,100 @@
 <script setup>
     import { useNotesStore } from '~~/store/NotesStore'
+    // const router = useRouter();
     const notesStore = useNotesStore()
     let showNotesMenu = ref(false)
     let showTasksMenu = ref(false)
+    let openMenu = ref(false)
+    
+    function navigate(noteType) {
+        notesStore.setNoteType(noteType)
+        navigateTo("/notes")
+    }
+
+    function toggleMenu() {
+        openMenu.value = !openMenu.value
+        if (openMenu.value) {
+            showNotesMenu.value = false
+            showTasksMenu.value = false
+        }
+    }
+    
 </script>
 <template>
-    <nav class="w-full top-0 left-0 bg-gray-700 text-indigo-900 pattern-grid-lg">
-        <ul class="p-6 text-gray-300 no-underline transition-all duration-300">
-            <li class="inline tracking-wider text-gray-300 font-bold font-marmelad text-xl hover:text-gray-400 duration-300 focus:outline-none"
-                @mouseenter="showNotesMenu=true" @click="notesStore.setNoteType('ALL')">
-                <NuxtLink class="p-6" to="/notes">
-                    All Notes  
-                    <i class="fa fa-solid fa-chevron-down"/>
+    <nav class="absolute">
+        <div @click="toggleMenu()" class="p-4">
+            <i class="fa fa-solid fa-bars text-gray-300 hover:text-gray-500 duration-300 text-3xl"/>
+        </div>
+        <ul class="text-gray-300 duration-300 text-xl p-4 menu-ul" :class="{open: openMenu}">
+            <li>
+                <span class="px-2 hover:text-gray-500 duration-300" @click="navigate('ALL')">
+                    All notes
+                </span>
+                <span class="px-2 hover:text-gray-500 duration-300">
+                    <i @click="showNotesMenu = !showNotesMenu" class="fa fa-solid fa-chevron-down"/>    
+                </span>
+            </li>
+
+            <li class="all-notes-menu" :class="{open: showNotesMenu}">
+                <span class="px-4 hover:text-gray-500 duration-300"  @click="navigate('NOTES')">
+                    Notes
+                </span>
+            </li>
+
+            <li class="all-notes-menu" :class="{open: showNotesMenu}">
+                <span class="px-4 hover:text-gray-500 duration-300" @click="navigate('TASKS')">
+                    Tasks
+                </span>
+                <span class="px-2 hover:text-gray-500 duration-300">
+                    <i @click="showTasksMenu = !showTasksMenu" class="fa fa-solid fa-chevron-down"/>    
+                </span>
+            </li>
+
+            <li>
+                <span class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('TO DO')">
+                    To do
+                </span>
+            </li>
+
+            <li>
+                <span class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('COMPLETED')">
+                    Completed
+                </span>
+            </li>
+
+            <li>
+                <NuxtLink to="/profile" class="px-2 hover:text-gray-500 duration-300">
+                    My profile
                 </NuxtLink>
             </li>
-            <div id="dropdown-menu" v-if="showNotesMenu" @mouseover="showNotesMenu=true" @mouseleave="(showNotesMenu=false)"
-                class="absolute bg-gray-700 rounded-md hover:rounded-md w-36 mt-6">
-                <ul class="w-full">
-                    <li class="p-2 border-b border-gray-500 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('NOTES')">
-                        <NuxtLink to="/notes">
-                            Notes
-                        </NuxtLink>
-                    </li>
-                    <div class="flex">
-                        <li @mouseenter="(showTasksMenu=true)" class="py-2 px-2 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('TASKS')">
-                            <NuxtLink to="/notes">
-                                Tasks <i class="fa fa-solid fa-chevron-right w-1/6"/>
-                            </NuxtLink>
-                        </li>
-                        <div id="tasks-menu" v-if="showTasksMenu" @mouseover="showTasksMenu=true" @mouseleave="(showTasksMenu=false)"  @click="notesStore.setNoteType('TASKS')"
-                            class="absolute bg-gray-700 rounded-md w-36 ml-32 mt-0 divide-y divide-solid divide-white">
-                            <ul class="w-full">
-                                <li class="p-2 border-b border-gray-500 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('TODO')">
-                                    <NuxtLink to="/notes">
-                                        To do
-                                    </NuxtLink>
-                                </li>
-                                <li class="p-2 w-full h-full hover:bg-gray-800 duration-300" @click="notesStore.setNoteType('COMPLETED')">
-                                    <NuxtLink to="/notes">
-                                        Completed
-                                    </NuxtLink>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </ul>
-            </div>
-            
-            <li class="inline tracking-wider text-gray-300 font-bold font-marmelad text-xl hover:text-gray-400 duration-300 focus:outline-none  ">
-                <NuxtLink class="p-6" to="/profile">My profile</NuxtLink>
+
+            <li>
+                <NuxtLink to="/history" class="px-2 hover:text-gray-500 duration-300">
+                    History
+                </NuxtLink>
             </li>
         </ul>
     </nav>
 </template>
+
+<style>
+.menu-ul:not(.open) {
+    transform: translate(-100%);
+}
+
+/* .all-notes-menu {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.5s linear;
+} */
+
+.all-notes-menu:not(.open) {
+    transform: translateX(-100%);
+    transition: all 1s linear;
+}
+
+.all-notes-menu:has(.open) {
+    transform: translateX(1%);
+    transition: all 1s linear;
+}
+</style>

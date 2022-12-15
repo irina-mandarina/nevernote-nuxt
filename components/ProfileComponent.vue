@@ -42,7 +42,7 @@
 </script>
 
 <template>
-    <div class="w-full h-full absolute bg-gray-800 text-indigo-900 pattern-grid-lg p-10">
+    <div class="w-full h-full bg-gray-800 text-indigo-900 pattern-grid-lg p-10">
         <div class="w-1/3 p-8 h-fit mx-auto bg-gray-900 rounded-xl shadow-2xl text-center">
             <div class="w-full text-center my-6 font-frank">
                 <p class="p-2 text-xl text-violet-800">Hello, <span class="font-light duration-300 hover:text-blue-700">  {{ name }} </span>!</p>

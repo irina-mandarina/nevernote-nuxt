@@ -172,3 +172,15 @@ export async function setBio(bio) {
     )
     return response.status
 }
+
+export async function getLogs() {
+    const response = await axios.get("http://localhost:5173/history",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+    return response
+}

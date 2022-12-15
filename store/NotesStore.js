@@ -34,7 +34,7 @@ export const useNotesStore = defineStore('notesStore', {
       this.editing = new Map()
       this.fillEditing()
     },
-    
+
     setNoteType(type) {
       if (!(["ALL", "NOTES", "TASKS", "TODO", "COMPLETED"].includes(type))) {
         this.noteType = "ALL"
@@ -123,7 +123,8 @@ export const useNotesStore = defineStore('notesStore', {
       
       if (response.status === 200) {
         toastr.info("Note is " + response.note.privacy)
-        this.notes.filter(it => it.id === response.note.id).at(0).completed = response.note.completed
+        debugger
+        this.notes.filter(it => it.id === response.note.id).at(0).privacy = response.note.privacy
       }
     },
 
