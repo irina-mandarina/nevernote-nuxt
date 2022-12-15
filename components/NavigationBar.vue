@@ -12,18 +12,18 @@
     }
 
     function toggleMenu() {
-        openMenu.value = !openMenu.value
-        if (openMenu.value) {
+        if (!openMenu.value) {
             showNotesMenu.value = false
             showTasksMenu.value = false
         }
+        openMenu.value = !openMenu.value
     }
     
 </script>
 <template>
     <nav class="absolute">
-        <div @click="toggleMenu()" class="p-4">
-            <i class="fa fa-solid fa-bars text-gray-300 hover:text-gray-500 duration-300 text-3xl"/>
+        <div @click="toggleMenu()" class="p-2">
+            <i class="py-2 px-3 bg-gray-600/[0.75] rounded-lg fa fa-solid fa-bars text-gray-300 hover:text-gray-500 duration-300 text-3xl"/>
         </div>
         <ul class="text-gray-300 duration-300 text-xl p-4 menu-ul" :class="{open: openMenu}">
             <li>
@@ -35,31 +35,42 @@
                 </span>
             </li>
 
-            <li class="all-notes-menu" :class="{open: showNotesMenu}">
-                <span class="px-4 hover:text-gray-500 duration-300"  @click="navigate('NOTES')">
-                    Notes
-                </span>
-            </li>
-
-            <li class="all-notes-menu" :class="{open: showNotesMenu}">
-                <span class="px-4 hover:text-gray-500 duration-300" @click="navigate('TASKS')">
-                    Tasks
-                </span>
-                <span class="px-2 hover:text-gray-500 duration-300">
-                    <i @click="showTasksMenu = !showTasksMenu" class="fa fa-solid fa-chevron-down"/>    
-                </span>
+            <li>
+                <Transition>
+                    <span v-if="showNotesMenu"
+                        class="px-4 hover:text-gray-500 duration-300" @click="navigate('NOTES')">
+                        Notes
+                    </span>
+                </Transition>
             </li>
 
             <li>
-                <span class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('TO DO')">
-                    To do
-                </span>
+                <Transition>
+                    <span v-if="showNotesMenu">
+                        <span class="px-4 hover:text-gray-500 duration-300" @click="navigate('TASKS')">
+                            Tasks
+                        </span>
+                        <span class="px-2 hover:text-gray-500 duration-300">
+                            <i @click="showTasksMenu = !showTasksMenu" class="fa fa-solid fa-chevron-down"/>    
+                        </span>
+                    </span> 
+                </Transition>
             </li>
 
             <li>
-                <span class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('COMPLETED')">
-                    Completed
-                </span>
+                <Transition>
+                    <span v-if="showTasksMenu" class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('TO DO')">
+                        To do
+                    </span>
+                </Transition>
+            </li>
+
+            <li>
+                <Transition>
+                    <span v-if="showTasksMenu" class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('COMPLETED')">
+                        Completed
+                    </span>
+                </Transition>
             </li>
 
             <li>
@@ -81,6 +92,15 @@
 .menu-ul:not(.open) {
     transform: translate(-100%);
 }
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 
 /* .all-notes-menu {
     visibility: visible;
@@ -88,7 +108,7 @@
     transition: all 0.5s linear;
 } */
 
-.all-notes-menu:not(.open) {
+/* .all-notes-menu:not(.open) {
     transform: translateX(-100%);
     transition: all 1s linear;
 }
@@ -96,5 +116,5 @@
 .all-notes-menu:has(.open) {
     transform: translateX(1%);
     transition: all 1s linear;
-}
+} */
 </style>
