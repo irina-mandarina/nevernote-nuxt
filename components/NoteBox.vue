@@ -21,10 +21,10 @@
         <!-- Side menu -->
         <div>
             <div class="relative w-fit float-right">
-                <button @click="displayNoteMenu = !displayNoteMenu"
+                <NuxtLink :to="'/notes/' + note.id"
                     class="flex p-0 m-0 mr-1 bg-transparent text-fuchsia-600 duration-700 hover:text-fuchsia-900 float-right border-0 text-sm focus:outline-0 focus:border-0">
                     ... 
-                </button>
+                </NuxtLink>
                 <br />
                 <button @click="$emit('toggleNoteBoxPrivacy', note.id)"
                     class="flex p-0 m-0 mt-1 bg-transparent text-fuchsia-800 duration-700 hover:text-fuchsia-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
@@ -37,7 +37,6 @@
                     class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                     <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
                 </button>
-                <NoteMenu v-if="displayNoteMenu" class="absolute" :id="note.id" @close-menu="displayNoteMenu = false"/>
             </div>
             <div class="relative w-fit float-left">
                 <button @click="$emit('completeTask', note.id)" v-if="(note.deadline !== undefined && note.deadline !== null)" 

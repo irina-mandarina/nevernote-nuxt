@@ -24,7 +24,10 @@
 <template>
     <div>
         <NuxtLayout name="default">
-            <NoteBox class="mx-40 my-40" v-if="note !== undefined && note !== null" :note="note" />
+            <div v-if="note !== undefined && note !== null" class="flex">
+                <NoteBox class="mx-40 my-60 w-1/2" :note="note" />
+                <NoteMenu class="w-1/3" :id="note.id"/>
+            </div>
         </NuxtLayout>
     </div>
 </template>
