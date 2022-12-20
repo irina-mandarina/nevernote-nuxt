@@ -25,7 +25,7 @@ export async function getNote(id) {
             }
         }
     )
-    return {note: response.data, status: response.status}
+    return response
 }
 
 export async function addNote(title, content, deadline, privacy) {
@@ -55,7 +55,7 @@ export async function deleteNote(id) {
             }
         }
     )
-    return response.status
+    return response
 }
 
 export async function editNote(id, title, content) {
@@ -71,7 +71,7 @@ export async function editNote(id, title, content) {
             }
         }
     )
-    return response.status
+    return response
 }
 
 
@@ -85,7 +85,7 @@ export async function completeTask(id) {
             }
         }
     )
-    return {status: response.status, note: response.data}
+    return response
 }
 
 export async function togglePrivacy(id) {
@@ -98,7 +98,7 @@ export async function togglePrivacy(id) {
             }
         }
     )
-    return {status: response.status, note: response.data}
+    return response
 }
 
 export async function register(username, password, name, address, age) {
@@ -175,6 +175,18 @@ export async function setBio(bio) {
 
 export async function getLogs() {
     const response = await axios.get("http://localhost:5173/history",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+    return response
+}
+
+export async function getPermissions(noteId) {
+    const response = await axios.get("http://localhost:5173/notes/" + noteId + "/permissions",
         {
             headers: {
                 'Content-Type': 'application/json',

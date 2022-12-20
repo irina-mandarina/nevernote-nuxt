@@ -3,21 +3,20 @@
     import { onBeforeMount } from 'vue'
     
     const route = useRoute()
+    let response = ref(null)
     let note = ref(null)
-    let status = ref(null)
     onBeforeMount(async () => {
         try {
-            note.value, status.value = await getNote(route.params.noteId)
+            response.value = await getNote(route.params.noteId)
+            if (response.value.status === 200) {
+                note.value = response.value.data
+            }
         } catch (error) { 
             if (error.response.status === 403) {
-            note.value = {title: "403 Forbidden", content: "You do not have access to this note."}
-        }
-        else note.value = {title: "Not found"}
-        }
-        if (status.value === 200) {
-            if (note.username === LSGetLogged()) {
-              notesStore.editing.set(note.id, false)
+                note.value = {title: "403 Forbidden", content: "You do not have access to this note."}
             }
+            else
+                note.value = {title: "Not found"}
         }
     })
 </script>

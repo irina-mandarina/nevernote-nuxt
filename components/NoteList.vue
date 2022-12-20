@@ -23,6 +23,32 @@
         notesStore.bigNoteId = -1
     }
 
+    function allowEdit(id) {
+        notesStore.fillEditing()
+        notesStore.editing.set(id, true)
+    }
+
+    function saveChanges(editedNote) {
+        notesStore.editing.set(editedNote.id, false)
+        notesStore.editNote(editedNote)
+    }
+
+    function cancelEdit(id) {
+        notesStore.editing.set(id, false)
+    }
+
+    function completeTask(id) {
+        notesStore.completeTask(id)
+    }
+ 
+    function toggleNoteBoxPrivacy(id) {
+        notesStore.togglePrivacy(id)
+    }
+
+    function deleteNote(id) {
+        notesStore.deleteNote(id)
+    }
+
 </script>
 
 <template>
@@ -41,7 +67,9 @@
 
         <div class="flex flex-wrap justify-evenly">
             <NoteAdder />
-            <NoteBox v-for="note in notes" :note="note" @show-note="showNote" />
+            <NoteBox v-for="note in notes" :note="note"
+                @show-note="showNote" @allow-edit="allowEdit" @save-changes="saveChanges" @cancel-edit="cancelEdit" 
+                @complete-task="completeTask" @toggle-note-box-privacy="toggleNoteBoxPrivacy" @delete-note="deleteNote" />
         </div>
     </div>
 </template>

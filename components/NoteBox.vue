@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, computed, onBeforeMount, onMounted } from 'vue'
+    import { ref } from 'vue'
     import { LSGetLogged } from '~~/js/localStorage'
     import { useNotesStore } from '~~/store/NotesStore'
 
@@ -10,48 +10,10 @@
     })
 
     let editable = ref(props.note.username === LSGetLogged())
-    
-    let newTitle = ref("")
-    let newContent = ref("")
-    let newDeadline = ref(null)
-
-    function allowEdit() {
-        if (editable.value) {
-            newTitle.value = props.note.title
-            newContent.value = props.note.content
-            newDeadline.value = props.note.deadline
-            notesStore.fillEditing()
-            notesStore.editing.set(props.note.id, true)
-        }
-    }
-
-    function saveChanges(id, date) {
-        let editedNote = {
-            id,
-            title: newTitle.value,
-            content: newContent.value,
-            deadline: newDeadline.value,
-            date
-        }
-        notesStore.editing.set(editedNote.id, false)
-        notesStore.editNote(editedNote)
-    }
-
-    function cancelEdit(id) {
-        notesStore.editing.set(id, false)
-    }
-
-    function completeTask(id) {
-        if (editable.value) {
-            notesStore.completeTask(id)
-        }
-    }
-
-    function togglePrivacy(id) {
-        if (editable.value) {
-            notesStore.togglePrivacy(id)
-        }
-    }
+    let displayNoteMenu = ref(false)
+    let newTitle = ref(props.note.title)
+    let newContent = ref(props.note.content)
+    let newDeadline = ref(props.note.deadline)
 </script>
 
 <template>
@@ -59,29 +21,32 @@
         <!-- Side menu -->
         <div>
             <div class="relative w-fit float-right">
-                <button v-if="editable" @click="notesStore.deleteNote(note.id)"
-                    class="flex p-0 m-0 mr-1 bg-transparent text-rose-600 duration-700 hover:text-red-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
-                    >
-                    x 
+                <button @click="displayNoteMenu = !displayNoteMenu"
+                    class="flex p-0 m-0 mr-1 bg-transparent text-fuchsia-600 duration-700 hover:text-fuchsia-900 float-right border-0 text-sm focus:outline-0 focus:border-0">
+                    ... 
                 </button>
                 <br />
-                <button @click="togglePrivacy(note.id)"
-                    class="flex p-0 m-0 mt-1 bg-transparent text-fuchsia-800 duration-700 hover:text-violet-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
+                <button @click="$emit('toggleNoteBoxPrivacy', note.id)"
+                    class="flex p-0 m-0 mt-1 bg-transparent text-fuchsia-800 duration-700 hover:text-fuchsia-900 float-right border-0 text-sm focus:outline-0 focus:border-0"
                     >
                     <i v-if="note.privacy === 'PRIVATE'" class="fa fa-lock" aria-hidden="true"></i>
                     <i v-if="note.privacy === 'PUBLIC'" class="fa fa-unlock" aria-hidden="true"></i>
                 </button>
                 <br />
-                <button v-if="editable" @click="allowEdit(note.id, note.title, note.content)" class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
+                <button v-if="editable" @click="$emit('allowEdit', note.id)"
+                    class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                     <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
                 </button>
+                <NoteMenu v-if="displayNoteMenu" class="absolute" :id="note.id" @close-menu="displayNoteMenu = false"/>
             </div>
             <div class="relative w-fit float-left">
-                <button @click="completeTask(note.id)" v-if="(note.deadline !== undefined && note.deadline !== null)" class="bg-gray-700 rounded-full float-right mt-2 w-5 h-5 text-center hover:bg-gray-600 duration-300 focus:outline-0 focus:border-0">
+                <button @click="$emit('completeTask', note.id)" v-if="(note.deadline !== undefined && note.deadline !== null)" 
+                    class="bg-gray-700 rounded-full float-right mt-2 w-5 h-5 text-center hover:bg-gray-600 duration-300 focus:outline-0 focus:border-0">
                     <i v-if="note.completed" class="fa fa-check text-xs text-indigo-300 bold p-1 align-middle" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
+
         <!-- Note info -->
         <div v-if="!editable || (notesStore !== null && !notesStore.editing.get(note.id))" @click="$emit('showNote', note.id)" 
         v-bind:id="'notebox'+note.id" class="h-full">
@@ -103,13 +68,17 @@
 
         <!-- Edit box -->
         <div v-if="editable && notesStore !== null && notesStore.editing.get(note.id)" v-bind:id="'editbox'+note.id" >
-            <input v-model="newTitle" type="text" placeholder="Title" class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
-            <textarea v-model="newContent" class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none" type="text" placeholder="Content"></textarea>
+            <input v-model="newTitle" type="text" placeholder="Title"
+                class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
+            <textarea v-model="newContent" type="text" placeholder="Content"
+                class="mx-auto flex rounded-md w-full tracking-wide text-sm italic text-gray-200 p-3 bg-gray-700 focus:outline-none">
+            </textarea>
             
-            <button @click="saveChanges(note.id, note.date)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
+            <button @click="$emit('saveChanges', {id: note.id, content: newContent, title: newTitle})"
+                class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
                 Save changes
             </button>
-            <button @click="cancelEdit(note.id)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
+            <button @click="$emit('cancelEdit', note.id)" class="button mt-4 mb-4 bg-indigo-800 rounded-xl px-4 py-2 mx-auto flex text-gray-300">
                 Cancel
             </button>
         </div>

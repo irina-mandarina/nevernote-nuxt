@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
-import { LSGetLogged } from '~~/js/localStorage'
 import { addNote, editNote, getNotes, deleteNote, completeTask, togglePrivacy, getNote } from '~~/js/requests'
 
 export const useNotesStore = defineStore('notesStore', {
   state: () => {
     return {
-        notes: [],
+        notes: null,
         bigNoteId: -1,
         editing: new Map(),
         noteType: "ALL",
@@ -19,8 +18,6 @@ export const useNotesStore = defineStore('notesStore', {
         response = await getNotes(this.noteType)
       } 
       catch(error) {
-        // delete this later!
-        console.log(error)
         if (error.response.status === 401) {
           navigateTo("/login")
         }
@@ -61,86 +58,89 @@ export const useNotesStore = defineStore('notesStore', {
         this.notes.push(note)
       }
       else if (status === 500) {
-        console.log("Could not connect to server")
+        toastr.error("Could not connect to server")
       }
       else if (status === 401) {
-        console.log("Unauthorised")
+        toastr.error("Unauthorised")
       }
       else {
-        console.log("Could not add note: " + title + ". Status: " + status)
+        toastr.error("Could not add note: " + title + ".")
       }
     },
 
     async editNote(editedNote) {
-      const status = await editNote(editedNote.id, editedNote.title, editedNote.content)
-      if (status === 201) {
-        for(let i = 0; i < this.notes.length; i++) {
-          if (this.notes[i].id === editedNote.id) {
-            this.notes[i] = editedNote
+      try {
+        const response = await editNote(editedNote.id, editedNote.title, editedNote.content)
+        if (response.status === 201) {
+          for(let i = 0; i < this.notes.length; i++) {
+            if (this.notes[i].id === editedNote.id) {
+              this.notes[i] = response.data
+            }
           }
         }
+      } catch (error) {
+        if (error.response.status === 500) {
+          toastr.error("Could not connect to server")
+          navigateTo('/')
+        }
+        else if (error.response.status === 401) {
+          toastr.error("Unauthorised")
+        }
+        else {
+          toastr.error("Could not edit note: " + editedNote.title)
+        }
       }
-      else if (status === 500) {
-        console.log("Could not connect to server")
-      }
-      else if (status === 401) {
-        console.log("Unauthorised")
-      }
-      else {
-        console.log("Could not edit note: " + editedNote.title + ". Status: " + status)
-      }
+      
     },
 
     async completeTask(id) {
-      let response = null
       try {
-        response = await completeTask(id)
+        const response = await completeTask(id)
+        if (response.status === 200) {
+          if (response.data.completed === true) {
+            toastr.success("You completed a task!")
+          }
+          this.notes.filter(it => it.id === response.data.id)[0].completed = response.data.completed
+        }
       }
       catch (error) {
         if (error.response.status === 404) {
           toastr.error("Task could not be completed. (404)")
         }
       }
-      
-      if (response.status === 200) {
-        if (response.note.completed === true) {
-          toastr.success("You completed a task!")
-        }
-        this.notes.filter(it => it.id === response.note.id).at(0).completed = response.note.completed
-      }
     },
     
     async togglePrivacy(id) {
-      let response = null
       try {
-        response = await togglePrivacy(id)
+        const response = await togglePrivacy(id)
+        if (response.status === 200) {
+          toastr.info("Note is " + response.data.privacy)
+          this.notes.filter(it => it.id === response.data.id)[0].privacy = response.data.privacy
+        }
       }
       catch (error) {
         if (error.response.status === 404) {
           toastr.error("Privacy could not get changed. (404)")
         }
       }
-      
-      if (response.status === 200) {
-        toastr.info("Note is " + response.note.privacy)
-        debugger
-        this.notes.filter(it => it.id === response.note.id).at(0).privacy = response.note.privacy
-      }
     },
 
     async deleteNote(noteId) {
-      const status = await deleteNote(noteId)
-      if (status === 204) {
-        this.notes = this.notes.filter((note) => note.id !== noteId)
-      }
-      else if (status === 500) {
-        console.log("Could not connect to server")
-      }
-      else if (status === 401) {
-        console.log("Unauthorised")
-      }
-      else {
-        console.log("Could not delete note. Status: " + status)
+      try {
+        const response = await deleteNote(noteId)
+        if (response.status === 204) {
+          this.notes = this.notes.filter((note) => note.id !== noteId)
+        }
+      } catch (error) {
+        if (response.status === 500) {
+          toastr.error("Could not connect to server")
+        }
+        else if (response.status === 401) {
+          toastr.error("Unauthorised")
+        }
+        else {
+          toastr.error("Could not delete note. Status: " + response.status)
+        }
       }
     }
   }
