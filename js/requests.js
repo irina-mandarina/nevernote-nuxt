@@ -198,10 +198,29 @@ export async function getPermissions(noteId) {
 }
 
 export async function grantPermission(username, noteId, permissionType) {
+    console.log(username)
     const response = await axios.post("http://localhost:5173/notes/" + noteId + "/permissions",
         {
             username,
-            id: noteId,
+            noteId,
+            permissionType
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+    return response
+}
+
+export async function deletePermission(username, noteId, permissionType) {
+    console.log(username)
+    const response = await axios.delete("http://localhost:5173/notes/" + noteId + "/permissions/" + permissionType,
+        {
+            username,
+            noteId,
             permissionType
         },
         {

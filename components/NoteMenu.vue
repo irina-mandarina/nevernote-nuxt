@@ -1,6 +1,6 @@
 <script setup>
     import { LSGetLogged } from '~~/js/localStorage';
-    import { getPermissions, grantPermission } from '~~/js/requests'
+    import { getPermissions, grantPermission, deletePermission } from '~~/js/requests'
 
     const props = defineProps({
         id: Number
@@ -77,6 +77,26 @@
         allowEdit.value = false
         await initPermissions()
     }
+
+    async function addPermission(username, permissionType) {
+        try {
+            const response = await grantPermission(username, props.id, permissionType)
+        }
+        catch (error) {
+            console.log(error)
+        }
+        await initPermissions()
+    }
+
+    async function removePermission(username, permissionType) {
+        try {
+            const response = await deletePermission(username, props.id, permissionType)
+        }
+        catch (error) {
+            console.log(error)
+        }
+        await initPermissions()
+    }
 </script>
 
 <template>
@@ -139,7 +159,7 @@
 
                 <!-- existing permissions for other users -->
                 <!-- should be scrollable FIX LATER!! -->
-                <Permission v-for="[username, userPermissions] in users" :username="username" :user-permissions="userPermissions" />
+                <Permission v-for="[username, userPermissions] in users" :username="username" :user-permissions="userPermissions" @grant="addPermission" @remove="removePermission" />
             </ul>
         </ul>
     </div>
