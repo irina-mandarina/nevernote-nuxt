@@ -196,3 +196,20 @@ export async function getPermissions(noteId) {
     )
     return response
 }
+
+export async function grantPermission(username, noteId, permissionType) {
+    const response = await axios.post("http://localhost:5173/notes/" + noteId + "/permissions",
+        {
+            username,
+            id: noteId,
+            permissionType
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+    return response
+}

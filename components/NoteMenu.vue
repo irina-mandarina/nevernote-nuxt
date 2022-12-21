@@ -1,6 +1,6 @@
 <script setup>
     import { LSGetLogged } from '~~/js/localStorage';
-    import { getPermissions } from '~~/js/requests'
+    import { getPermissions, grantPermission } from '~~/js/requests'
 
     const props = defineProps({
         id: Number
@@ -17,6 +17,10 @@
     let allowDelete = ref(false)
 
     onBeforeMount(async () => {
+        await initPermissions()
+    })
+
+    async function initPermissions() {
         try {
             response.value = await getPermissions(props.id)
             for (let i = 0; i < response.value.data.length; i++) {
@@ -27,33 +31,51 @@
                 }
 
                 else {
-                    if (!users.value.includes(permission.username)) {
+                    if (!users.value.has(permission.username)) {
                         users.value.set(permission.username, [permission.permissionType])
                     }
                     else {
-                        let p = users.value.get(permission.username).push(permission.permissionType)
+                        let p = users.value.get(permission.username)
+                        p.push(permission.permissionType)
                         users.value.set(permission.username, p)
                     }
                 }
             }
-        console.log(users.value)
         }
         catch (error) {
             console.log(error)
         }
-    })
+    }
 
-    function addPermissions() {
-        alert(1)
-        if (allowRead) {
-            // grant
+    async function addPermissions() {
+        if (allowRead.value) {
+            try {
+                const response = await grantPermission(newUser.value, props.id, "GET")
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
-        if (allowEdit) {
-            // grant
+        if (allowEdit.value) {
+            try {
+                const response = await grantPermission(newUser.value, props.id, "PUT")
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
-        if (allowDelete) {
-            // grant
+        if (allowDelete.value) {
+            try {
+                const response = await grantPermission(newUser.value, props.id, "DELETE")
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
+        allowDelete.value = false
+        allowRead.value = false
+        allowEdit.value = false
+        await initPermissions()
     }
 </script>
 
@@ -82,7 +104,7 @@
                 <i class="fa fa-chevron-down" v-if="permissionsPanel"/>
             </li>
 
-            <ul v-if="permissionsPanel" class="w-full bg-slate-800 mb-2 py-4">
+            <ul v-if="permissionsPanel" class="w-full bg-slate-800 mb-2 pt-2">
                 <!-- add permissions -->
                 <div class="w-full">
                     <div class="w-fit py-4 mx-auto">
@@ -117,22 +139,7 @@
 
                 <!-- existing permissions for other users -->
                 <!-- should be scrollable FIX LATER!! -->
-                <div v-for="[username, userPermissions] in users" class="flex w-full">
-                    <span class="w-1/3 p-4">
-                        {{ username }}
-                    </span>
-                    <span class="w-2/3 flex justify-evenly">
-                        <span v-if="userPermissions.includes('GET')" @click="" class="p-4 hover:text-violet-500 duration-300">
-                            READ
-                        </span>
-                        <span v-if="userPermissions.includes('PUT')" @click="" class="p-4 hover:text-violet-500 duration-300">
-                            EDIT
-                        </span>
-                        <span v-if="userPermissions.includes('DELETE')" @click="" class="p-4 hover:text-violet-500 duration-300">
-                            DELETE
-                        </span>
-                    </span>
-                </div>
+                <Permission v-for="[username, userPermissions] in users" :username="username" :user-permissions="userPermissions" />
             </ul>
         </ul>
     </div>
