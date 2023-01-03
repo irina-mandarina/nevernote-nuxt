@@ -6,10 +6,12 @@
     let notesStore = useNotesStore()
 
     const props = defineProps({
-        note: Object
+        note: Object,
+        loggedUserPermissions: Array,
+        editing: Boolean
     })
 
-    let editable = ref(props.note.username === LSGetLogged())
+    // let editable = ref(props.note.username === LSGetLogged())
     let displayNoteMenu = ref(false)
     let newTitle = ref(props.note.title)
     let newContent = ref(props.note.content)
@@ -19,7 +21,7 @@
 <template>
     <div v-if="(note != undefined && note != null)" v-bind:id="'note' + note.id" class="inline-block w-1/4 bg-gray-900 rounded-3xl p-8 m-6 shadow-lg">
         <!-- Side menu -->
-        <div>
+        <div v-if="loggedUserPermissions.includes('PUT')">
             <div class="relative w-fit float-right">
                 <NuxtLink :to="'/notes/' + note.id"
                     class="flex p-0 m-0 mr-1 bg-transparent text-fuchsia-600 duration-700 hover:text-fuchsia-900 float-right border-0 text-sm focus:outline-0 focus:border-0">
@@ -33,7 +35,7 @@
                     <i v-if="note.privacy === 'PUBLIC'" class="fa fa-unlock" aria-hidden="true"></i>
                 </button>
                 <br />
-                <button v-if="editable" @click="$emit('allowEdit', note.id)"
+                <button @click="$emit('allowEdit', note.id)"
                     class="flex p-0 m-0 mt-2 bg-transparent float-right border-0 text-sm focus:outline-0 focus:border-0">
                     <i class="fa fa-pencil stroke-1 hover:stroke-2 duration-500 text-fuchsia-900 hover:text-violet-900"></i>
                 </button>
@@ -47,7 +49,7 @@
         </div>
 
         <!-- Note info -->
-        <div v-if="!editable || (notesStore !== null && !notesStore.editing.get(note.id))" @click="$emit('showNote', note.id)" 
+        <div v-if="!loggedUserPermissions.includes('PUT') || (!editing)" @click="$emit('showNote', note.id)" 
         v-bind:id="'notebox'+note.id" class="h-full">
             <h3 v-if="(note.title !== undefined)" class="py-4 break-words font-frank text-center text-gray-400">
                 {{ note.title }}  
@@ -66,7 +68,7 @@
         </div>
 
         <!-- Edit box -->
-        <div v-if="editable && notesStore !== null && notesStore.editing.get(note.id)" v-bind:id="'editbox'+note.id" >
+        <div v-if="loggedUserPermissions.includes('PUT') && editing" v-bind:id="'editbox'+note.id" >
             <input v-model="newTitle" type="text" placeholder="Title"
                 class="break-words mx-auto font-frank rounded-md text-md text-gray-300 text-center py-2 my-2 bg-gray-700 focus:outline-none">
             <textarea v-model="newContent" type="text" placeholder="Content"

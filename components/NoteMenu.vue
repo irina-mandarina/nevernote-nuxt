@@ -15,6 +15,7 @@
     let allowRead = ref(false)
     let allowEdit = ref(false)
     let allowDelete = ref(false)
+    let showLink = ref(false)
 
     onBeforeMount(async () => {
         await initPermissions()
@@ -106,16 +107,17 @@
         </button> -->
         <ul class="" v-if="ownPermissions !== null">
             <li v-if="ownPermissions.includes('PUT')" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
-                @click="">
+                @click="$emit('allowEdit')">
                 Edit
             </li>
             <li v-if="ownPermissions.includes('DELETE')" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
-                @click="">
+                @click="$emit('deleteNote')">
                 Delete
             </li>
             <li v-if="ownPermissions.includes('GET')" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
-                @click="">
-                Copy link
+                @click="showLink = !showLink">
+                <p v-if="!showLink">Copy link</p>
+                <a v-if="showLink" :href="'http://localhost:3000/notes/' + id">http://localhost:3000/notes/{{ id }}</a>
             </li>
             <li v-if="ownPermissions.includes('POST')" class="text-center p-4 w-full hover:bg-slate-800/[.3] duration-300"
                 @click="permissionsPanel = !permissionsPanel">

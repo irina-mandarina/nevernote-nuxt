@@ -6,7 +6,7 @@ export const useNotesStore = defineStore('notesStore', {
     return {
         notes: null,
         bigNoteId: -1,
-        editing: new Map(),
+        editing: null,
         noteType: "ALL",
     }
   },
@@ -28,7 +28,7 @@ export const useNotesStore = defineStore('notesStore', {
       if (response.status === 200) {
         this.notes = response.notes
       }
-      this.editing = new Map()
+      this.editing = null
       this.fillEditing()
     },
 
@@ -43,9 +43,9 @@ export const useNotesStore = defineStore('notesStore', {
     },
 
     fillEditing() {
-      for(let index = 0; index < this.notes.length; index++) {
-        this.editing.set(this.notes[index].id, false)
-      }
+      // for(let index = 0; index < this.notes.length; index++) {
+      //   this.editing.set(this.notes[index].id, false)
+      // }
     },
 
     async addNote(title, content, deadline, privacy) {

@@ -7,6 +7,7 @@
     const userStore = useUserStore()
     let notes = computed(() => notesStore.notes)
     let name = computed(() => userStore.name)
+    let loggedUserPermissions = ref(["GET", "PUT", "POST"])
 
     onMounted(() => {
         let username = computed(() => userStore.username).value
@@ -25,11 +26,11 @@
 
     function allowEdit(id) {
         notesStore.fillEditing()
-        notesStore.editing.set(id, true)
+        notesStore.editing = id
     }
 
     function saveChanges(editedNote) {
-        notesStore.editing.set(editedNote.id, false)
+        notesStore.editing = null
         notesStore.editNote(editedNote)
     }
 
@@ -67,7 +68,8 @@
 
         <div class="flex flex-wrap justify-evenly">
             <NoteAdder />
-            <NoteBox v-for="note in notes" :note="note"
+            <NoteBox v-for="note in notes"
+                :note="note" :logged-user-permissions="loggedUserPermissions" :editing="notesStore.editing !== null"
                 @show-note="showNote" @allow-edit="allowEdit" @save-changes="saveChanges" @cancel-edit="cancelEdit" 
                 @complete-task="completeTask" @toggle-note-box-privacy="toggleNoteBoxPrivacy" @delete-note="deleteNote" />
         </div>
