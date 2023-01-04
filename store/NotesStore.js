@@ -42,12 +42,6 @@ export const useNotesStore = defineStore('notesStore', {
       this.getNotes(this.noteType)
     },
 
-    fillEditing() {
-      // for(let index = 0; index < this.notes.length; index++) {
-      //   this.editing.set(this.notes[index].id, false)
-      // }
-    },
-
     async addNote(title, content, deadline, privacy) {
       const {note, status} = await addNote(title, content, deadline, privacy)
       if (status === 201) { 

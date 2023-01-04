@@ -59,7 +59,7 @@
 
             <li>
                 <Transition>
-                    <span v-if="showTasksMenu" class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('TO DO')">
+                    <span v-if="showTasksMenu" class="px-6 hover:text-gray-500 duration-300 tasks-menu" @click="navigate('TODO')">
                         To do
                     </span>
                 </Transition>
