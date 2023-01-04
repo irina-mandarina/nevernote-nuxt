@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { LSLogOut, LSSetLogged, LSSetToken } from '~~/js/localStorage'
-import { logIn, logOut, register, userDetails, setBio } from '~~/js/requests'
+import { logIn, logOut, register, userDetails, setBio, getRoles } from '~~/js/requests'
 
 export const useUserStore = defineStore('userStore', {
   state: () => {
@@ -12,13 +12,14 @@ export const useUserStore = defineStore('userStore', {
         address: null,
         bio: null,
         logged: false,
-        server: ref(true)
+        server: ref(true),
+        roles: []
     }
   },
 
   actions: {
     async register(user) {
-      await register(user.username, user.password, user.name, user.address, user.age)
+      await register(user)
       this.password = password
       this.logIn(username)
       navigateTo('/notes')
@@ -38,6 +39,7 @@ export const useUserStore = defineStore('userStore', {
     async logIn(username) {
       this.username = username
       this.logged = true
+      this.getRoles()
       LSSetLogged(username)
     },
 
@@ -82,6 +84,21 @@ export const useUserStore = defineStore('userStore', {
       }
       else {
         console.log("Problem while adding a new bio")
+      }
+    },
+
+    async getRoles() {
+      try {
+        const response = await getRoles()
+        for (let i = 0; i < response.data.length; i++) {
+          this.roles.push(response.data[i].role)
+        }
+        console.log(rhis.roles)
+      }
+      catch (error) {
+        if (error.response.status === 401) {
+          navigateTo('/')
+        }
       }
     }
   }

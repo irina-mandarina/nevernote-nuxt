@@ -101,14 +101,10 @@ export async function togglePrivacy(id) {
     return response
 }
 
-export async function register(username, password, name, address, age) {
+export async function register(user) {
     const response = await axios.post("http://localhost:5173/auth/register", 
         {
-            username,
-            password,
-            name,
-            age,
-            address
+            user
         }, 
         {
             headers: {
@@ -161,7 +157,7 @@ export async function userDetails() {
 }
 
 export async function setBio(bio) {
-    const response = await axios.put("http://localhost:5173/profile/set-bio",
+    const response = await axios.put("http://localhost:5173/profile/bio",
         bio,
         {
             headers: {
@@ -223,6 +219,18 @@ export async function deletePermission(username, noteId, permissionType) {
             },
             params: {
                 username
+            }
+        }
+    )
+    return response
+}
+
+export async function getRoles() {
+    const response = await axios.get("http://localhost:5173/auth/roles",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
             }
         }
     )
