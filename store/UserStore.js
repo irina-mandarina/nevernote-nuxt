@@ -6,7 +6,6 @@ export const useUserStore = defineStore('userStore', {
   state: () => {
     return {
         username: null,
-        password: null,
         name: null,
         age: 0,
         address: null,
@@ -20,8 +19,7 @@ export const useUserStore = defineStore('userStore', {
   actions: {
     async register(user) {
       await register(user)
-      this.password = password
-      this.logIn(username)
+      this.logIn(user.username)
       navigateTo('/notes')
     },
 

@@ -104,7 +104,12 @@ export async function togglePrivacy(id) {
 export async function register(user) {
     const response = await axios.post("http://localhost:5173/auth/register", 
         {
-            user
+            username: user.username,
+            name: user.name,
+            address: user.address,
+            age: user.age,
+            roles: user.roles,
+            password: user.password
         }, 
         {
             headers: {
@@ -112,6 +117,7 @@ export async function register(user) {
             }
         }
     )
+    LSSetToken(response.data)
     return response.status
 }
 

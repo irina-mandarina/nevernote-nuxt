@@ -3,7 +3,8 @@
     import { getPermissions, grantPermission, deletePermission } from '~~/js/requests'
 
     const props = defineProps({
-        id: Number
+        id: Number,
+        editing: Boolean
     })
 
     let ownPermissions = ref([])
@@ -106,19 +107,27 @@
             x
         </button> -->
         <ul class="" v-if="ownPermissions !== null">
-            <li v-if="ownPermissions.includes('PUT')" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
+            <li v-if="ownPermissions.includes('PUT') && !editing" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
                 @click="$emit('allowEdit')">
                 Edit
             </li>
+
+            <li v-if="ownPermissions.includes('PUT') && editing" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
+                @click="$emit('cancelEdit')">
+                Cancel
+            </li>
+
             <li v-if="ownPermissions.includes('DELETE')" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
                 @click="$emit('deleteNote')">
                 Delete
             </li>
+
             <li v-if="ownPermissions.includes('GET')" class="border-b border-slate-600 p-4 text-center w-full hover:bg-slate-800/[.3] duration-300"
                 @click="showLink = !showLink">
                 <p v-if="!showLink">Copy link</p>
                 <a v-if="showLink" :href="'http://localhost:3000/notes/' + id">http://localhost:3000/notes/{{ id }}</a>
             </li>
+            
             <li v-if="ownPermissions.includes('POST')" class="text-center p-4 w-full hover:bg-slate-800/[.3] duration-300"
                 @click="permissionsPanel = !permissionsPanel">
                 Manage permissions

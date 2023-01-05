@@ -16,7 +16,6 @@
     })
 
     function showNote(id) {
-        notesStore.fillEditing()
         notesStore.bigNoteId = id
     }
 
@@ -25,7 +24,6 @@
     }
 
     function allowEdit(id) {
-        notesStore.fillEditing()
         notesStore.editing = id
     }
 
@@ -35,7 +33,7 @@
     }
 
     function cancelEdit(id) {
-        notesStore.editing.set(id, false)
+        notesStore.editing = null
     }
 
     function completeTask(id) {
@@ -67,9 +65,9 @@
         </div>
 
         <div class="flex flex-wrap justify-evenly">
-            <NoteAdder />
+            <NoteAdder v-if="userStore.roles.includes('USER')" />
             <NoteBox v-for="note in notes"
-                :note="note" :logged-user-permissions="loggedUserPermissions" :editing="notesStore.editing !== null"
+                :note="note" :logged-user-permissions="loggedUserPermissions" :editing="notesStore.editing === note.id"
                 @show-note="showNote" @allow-edit="allowEdit" @save-changes="saveChanges" @cancel-edit="cancelEdit" 
                 @complete-task="completeTask" @toggle-note-box-privacy="toggleNoteBoxPrivacy" @delete-note="deleteNote" />
         </div>

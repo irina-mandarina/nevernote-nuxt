@@ -29,7 +29,6 @@ export const useNotesStore = defineStore('notesStore', {
         this.notes = response.notes
       }
       this.editing = null
-      this.fillEditing()
     },
 
     setNoteType(type) {
