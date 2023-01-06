@@ -1,7 +1,9 @@
 <script setup>
     import { useNotesStore } from '~~/store/NotesStore'
-    // const router = useRouter();
+    import { useUserStore } from '~~/store/UserStore'
+
     const notesStore = useNotesStore()
+    const userStore = useUserStore()
     let showNotesMenu = ref(false)
     let showTasksMenu = ref(false)
     let openMenu = ref(false)
@@ -82,6 +84,12 @@
             <li>
                 <NuxtLink to="/history" class="px-2 hover:text-gray-500 duration-300">
                     History
+                </NuxtLink>
+            </li>
+
+            <li v-if="userStore.roles.includes('ADMIN')">
+                <NuxtLink to="/roles" class="px-2 hover:text-gray-500 duration-300">
+                    Manage roles
                 </NuxtLink>
             </li>
         </ul>

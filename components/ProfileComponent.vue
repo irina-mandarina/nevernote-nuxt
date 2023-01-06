@@ -56,6 +56,16 @@
                 </p>
             </div>
 
+            <!-- roles -->
+            <div class="flex justify-evenly px-6">
+                <div v-if="userStore.roles.includes('USER')" class="userrole role bg-gray-800 text-gray-200 shadow-inner hover:bg-gray-900 hover:text-gray-100 duration-300 rounded-full py-2 px-3">
+                    USER
+                </div>
+                <div v-if="userStore.roles.includes('ADMIN')" class="adminrole role bg-gray-800 text-gray-200 shadow-inner hover:bg-gray-900 hover:text-gray-100 duration-300 rounded-full py-2 px-3">
+                    ADMIN
+                </div>
+            </div>
+
             <p id="biobox" class="flex w-5/6 text-center block text-serif font-weight-300 mx-auto break-words whitespace-normal p-4"> {{ bio }} </p>
             <textarea v-model="newBio" id="editbox" class="hidden mx-auto flex rounded-md w-3/4 whitespace-normal tracking-wide text-sm text-gray-400 px-2 resize-none break-words focus:outline-none bg-gray-600" type="text" placeholder="Bio"></textarea>
             <button @click="editBio()" id="editbiobtn" class="font-marmelad font-bold block my-4 mx-auto bg-[#4310c49d] text-gray-400 p-3 rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">Change bio</button>
@@ -67,3 +77,18 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    .userrole:hover::before {
+        content: 'You have a';
+    }
+
+    .adminrole:hover::before {
+        content: 'You have an';
+    }
+
+    .role:hover::after {
+        content: 'role';
+    }
+    
+</style>

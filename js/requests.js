@@ -242,3 +242,43 @@ export async function getRoles() {
     )
     return response
 }
+
+export async function getAllUsersRoles() {
+    const response = await axios.get("http://localhost:5173/users/roles",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+    return response
+}
+
+export async function addRole(username, role) {
+    const response = await axios.post("http://localhost:5173/users/" + username + "/roles",
+        role,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            },
+        }
+    )
+    return response
+}
+
+export async function removeRole(username, role) {
+    const response = await axios.delete("http://localhost:5173/users/" + username + "/roles",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            },
+            params: {
+                role
+            }
+        }
+    )
+    return response
+}
