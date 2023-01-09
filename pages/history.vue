@@ -7,9 +7,8 @@
     onBeforeMount(async () => {
         try {
             response.value = await getLogs()
-            console.log(response.value)
         } catch (error) { 
-            console.log(error)
+            toastr.error("Could not retrieve history")
         }
         if (response.value.status === 200) {
             logs.value = response.value.data

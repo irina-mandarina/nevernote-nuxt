@@ -50,7 +50,7 @@ export const useUserStore = defineStore('userStore', {
         this.bio = details.bio
       }
       else if (status === 401) {
-        console.log("UnUTHORISED")
+        console.log("UNAUTHORISED")
       }
       else if (status === 500) {
         console.log("Could not connect to server")
@@ -91,9 +91,9 @@ export const useUserStore = defineStore('userStore', {
         for (let i = 0; i < response.data.length; i++) {
           this.roles.push(response.data[i].role)
         }
-        console.log(rhis.roles)
       }
       catch (error) {
+        console.log(error)
         if (error.response.status === 401) {
           navigateTo('/')
         }
