@@ -108,7 +108,6 @@ export async function register(user) {
             name: user.name,
             address: user.address,
             age: user.age,
-            roles: user.roles,
             password: user.password
         }, 
         {

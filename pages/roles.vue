@@ -50,14 +50,14 @@
         catch (error) {
             console.log(error)
         }
-        initRoles()
+        initRoles() 
     }
 </script>
 <template>
     <div>
         <NuxtLayout name="default">
             <div class="flex flex-wrap justify-evenly pt-32">
-                <UserRole v-for="[username, roles] in rolesMap" :roles="roles" :username="username" :all-roles="['USER', 'ADMIN']"
+                <UserRoles v-for="[username, roles] in rolesMap" :roles="roles" :username="username" :all-roles="['USER', 'ADMIN']"
                 @remove-role="deleteRole" @add-role="postRole" />
             </div>
         </NuxtLayout>

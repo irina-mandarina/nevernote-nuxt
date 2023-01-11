@@ -37,8 +37,7 @@
         opacity: 1;
         transition: all 0.3s;
     }
-
-
+    
     .owned::before {
         content: 'Remove ';
         opacity: 0;

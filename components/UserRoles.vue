@@ -11,18 +11,6 @@
             {{ username }}
         </div>
 
-        <Role v-for="role in allRoles" :role="role" :owned="roles.includes(role)"/>
+        <Role v-for="role in allRoles" :role="role" :owned="roles.includes(role)" @add-role="$emit('addRole', username, role)"  @remove-role="$emit('removeRole', username, role)"/>
     </div>
 </template>
-
-<style scoped>
-    .hasRole {
-        background-color: rgb(50, 0, 130);
-    }
-
-    
-    .hasntGotRole {
-        background-color: rgb(48, 46, 58);
-        color: rgb(97, 96, 134);
-    }
-</style>

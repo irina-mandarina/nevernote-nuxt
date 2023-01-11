@@ -7,16 +7,16 @@
     const name = ref(null)
     const age = ref(null)
     const address = ref(null)
-    const roles = ref([])
+    // const roles = ref([])
 
-    function toggleRole(role) {
-        if (roles.value.includes(role)) {
-            roles.value = roles.value.filter(it => it !== role)
-        }
-        else {
-            roles.value.push(role)
-        }
-    }
+    // function toggleRole(role) {
+    //     if (roles.value.includes(role)) {
+    //         roles.value = roles.value.filter(it => it !== role)
+    //     }
+    //     else {
+    //         roles.value.push(role)
+    //     }
+    // }
 </script>
 
 <template>
@@ -66,7 +66,7 @@
                         <p id="outlined_error_help" class="mt-2 text-xs text-red-600 dark:text-red-400"><span class="font-medium">!</span> {{ error.$message }} </p>    
                     </div> -->
                 </div>
-
+<!-- 
                 <div class="relative mx-auto z-0 my-6">
                     <label for="roles" class="absolute text-center text-sm text-gray-400 hover:text-gray-300 duration-300 ">
                         Roles:
@@ -91,12 +91,12 @@
                             USER
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </div>
             
             <div class="mx-auto flex z-0 my-4">
-                <button @click="userStore.register({username, password, name, age, address, roles})" class="mx-auto w-1/4 bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">
+                <button @click="userStore.register({username, password, name, age, address})" class="mx-auto w-1/4 bg-violet-900 text-gray-900 p-3 font-[500] rounded-2xl shadow-lg focus:outline-none hover:bg-violet-800 hover:rounded-3xl duration-500">
                     Sign up
                 </button>   
             </div>
