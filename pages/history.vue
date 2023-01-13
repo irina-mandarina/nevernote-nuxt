@@ -18,6 +18,7 @@
 <template>
     <div>
         <NuxtLayout name="default">
+            <HistoryMenu />
             <div class="py-12">
             </div>
             <div v-if="logs !== null" v-for="log in logs">

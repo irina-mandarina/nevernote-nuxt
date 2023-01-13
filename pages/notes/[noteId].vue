@@ -1,7 +1,9 @@
 <script setup>
     import { getNote, getPermissions, deleteNote, editNote } from '~~/js/requests'
     import { onBeforeMount } from 'vue'
+    import { useNotesStore } from '~~/store/NotesStore'
     
+    const notesStore = useNotesStore()
     const route = useRoute()
     let response = ref(null)
     let note = ref(null)
