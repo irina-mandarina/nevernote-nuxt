@@ -13,7 +13,7 @@
     }
 </script>
 <template>
-    <div class="w-full h-full fixed bg-gray-800 text-indigo-900 pattern-grid-lg">
+    <div class="w-full h-full fixed bg-gray-800 text-indigo-900 pattern-grid-lg" @keyup.enter="logIn()">
 
         <div class="w-1/3 p-12 h-fit mx-auto mt-32 bg-gray-900 rounded-xl shadow-2xl">
             <div class="w-full text-center my-12">

@@ -174,12 +174,28 @@ export async function setBio(bio) {
     return response.status
 }
 
-export async function getLogs() {
+export async function getLogs(search) {
     const response = await axios.get("http://localhost:5173/history",
         {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + LSGetToken(),
+            }
+        }
+    )
+    return response
+}
+
+export async function searchLogs(search, orderByDateDesc) {
+    const response = await axios.get("http://localhost:5173/history/search",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LSGetToken(),
+            },
+            params: {
+                search,
+                orderByDateDesc
             }
         }
     )

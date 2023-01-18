@@ -8,6 +8,10 @@
     let showTasksMenu = ref(false)
     let openMenu = ref(false)
     
+    let showNav = ref(true)
+    let lastKnownScrollPosition = 0
+    let currentScrollPosition = 0
+    
     function navigate(noteType) {
         notesStore.setNoteType(noteType)
         navigateTo("/notes")
@@ -20,10 +24,32 @@
         }
         openMenu.value = !openMenu.value
     }
+
+    onMounted(() => {
+        document.addEventListener("scroll", (event) => {
+            currentScrollPosition = window.scrollY
+            if (currentScrollPosition > 600) {
+                showNav.value = false
+                openMenu.value = false
+            }
+            if (currentScrollPosition < lastKnownScrollPosition) {
+                // scrolling up
+                showNav.value = true
+            }
+            else {
+                showNav.value = false
+                openMenu.value = false
+            }
+            lastKnownScrollPosition = window.scrollY
+        })
+    })
     
 </script>
 <template>
-    <nav class="absolute">
+    <nav class="fixed z-50 duration-200" :class="{
+            'translate-y-0': showNav,
+            '-translate-y-full': !showNav
+        }">
         <div @click="toggleMenu()" class="p-2">
             <i class="py-2 px-3 bg-gray-600/[0.75] rounded-lg fa fa-solid fa-bars text-gray-300 hover:text-gray-500 duration-300 text-3xl"/>
         </div>
