@@ -49,9 +49,6 @@ export const useUserStore = defineStore('userStore', {
         this.address = details.address
         this.bio = details.bio
       }
-      else if (status === 401) {
-        console.log("UNAUTHORISED")
-      }
       else if (status === 500) {
         console.log("Could not connect to server")
       }

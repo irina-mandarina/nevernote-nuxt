@@ -63,14 +63,14 @@
             'translate-y-0': showNav,
             '-translate-y-full': !showNav
         }">
-        <nav class="bg-gray-900 w-fit max-w-5/6 mx-auto p-4 flex rounded-b-lg relative text-center text-violet-500 justify-center">
-            <ul class="flex w-2/3">
+        <nav class="bg-gray-900 w-2/3 max-w-5/6 mx-auto p-4 flex rounded-b-lg relative text-center text-violet-500 justify-center">
+            <ul class="flex w-2/3 pt-4">
                 <span class="text-violet-400 whitespace-nowrap font-serif tracking-wide">
                     Filter by: 
                 </span>
-                <li class="px-4">
-                    <span class="w-2/3">
-                        <input type="checkbox" v-model="filterByUsername" class="p-2 mx-2" />
+                <li class="w-1/4 px-4">
+                    <span class="">
+                        <input type="checkbox" v-model="filterByUsername" class="p-2 mx-2 focus:outline-none" />
                         user
                     </span>
                     <input v-model="username"
@@ -82,9 +82,9 @@
                     }"
                     class="bg-transparent rounded-full border-b-2 w-2/3 border-violet-700 focus:outline-none px-2"/>
                 </li>
-                <li class="px-4">
-                    <span class="w-full">
-                        <input type="checkbox" v-model="filterByDate" class="p-2 mx-2" />
+                <li class="w-1/4 px-4">
+                    <span class="">
+                        <input type="checkbox" v-model="filterByDate" class="p-2 mx-2 focus:outline-none" />
                         date
                     </span>
                     <div :class="{
@@ -100,9 +100,9 @@
                     </div>
                     
                 </li>
-                <li class="px-4 relative">
+                <li class="w-1/4 px-4 relative">
                     <span class="flex mb-2">
-                        <input type="checkbox" v-model="filterByMethod" class="p-2 mx-2" />
+                        <input type="checkbox" v-model="filterByMethod" class="p-2 mx-2 focus:outline-none" />
                         method
                     </span>
                     <span v-if="filterByMethod && !methodSelector && method !== null"
@@ -148,9 +148,9 @@
                         </ul>
                     </div>
                 </li>
-                <li class="px-4">
-                    <span class="w-2/3">
-                        <input type="checkbox" v-model="filterByNote" class="p-2 mx-2" />
+                <li class="w-1/4 px-4">
+                    <span class="w-min">
+                        <input type="checkbox" v-model="filterByNote" class="p-2 mx-2 focus:outline-none" />
                         note
                     </span>
                     <input :class="{

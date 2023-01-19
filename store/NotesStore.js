@@ -53,9 +53,6 @@ export const useNotesStore = defineStore('notesStore', {
       else if (status === 500) {
         toastr.error("Could not connect to server")
       }
-      else if (status === 401) {
-        toastr.error("Unauthorised")
-      }
       else {
         toastr.error("Could not add note: " + title + ".")
       }
@@ -75,9 +72,6 @@ export const useNotesStore = defineStore('notesStore', {
         if (error.response.status === 500) {
           toastr.error("Could not connect to server")
           navigateTo('/')
-        }
-        else if (error.response.status === 401) {
-          toastr.error("Unauthorised")
         }
         else {
           toastr.error("Could not edit note: " + editedNote.title)
@@ -127,9 +121,6 @@ export const useNotesStore = defineStore('notesStore', {
       } catch (error) {
         if (response.status === 500) {
           toastr.error("Could not connect to server")
-        }
-        else if (response.status === 401) {
-          toastr.error("Unauthorised")
         }
         else {
           toastr.error("Could not delete note. Status: " + response.status)
