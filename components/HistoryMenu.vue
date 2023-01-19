@@ -1,21 +1,27 @@
 <script setup>
-    let searchParams = ref('')
 
-    let date = ref(new Date())
-    let username = ref('alex')
+    let maxDate = ref(null)
+    let minDate = ref(null)
+    let username = ref(null)
+    let noteId = ref(null)
+    let method = ref(null)
+
     let orderByDateDesc = ref(true)
     let filterByMethod = ref(false)
     let filterByDate = ref(false)
     let filterByUsername = ref(false)
     let filterByNote= ref(false)
-
-    function searchByUsername() {
-        searchParams.value += 'username:' + user.value + ','
-    }
+    let methodSelector = ref(false)
     
     let showNav = ref(true)
     let lastKnownScrollPosition = 0
     let currentScrollPosition = 0
+
+    let searchParams = ref([])
+
+    const emits = defineEmits([
+        'search'
+    ])
 
     onMounted(() => {
         document.addEventListener("scroll", (event) => {
@@ -33,6 +39,24 @@
             lastKnownScrollPosition = window.scrollY
         })
     })
+
+    function search() {
+        searchParams.value = ''
+        if (filterByUsername.value) {
+            searchParams.value += 'username:' + username.value + ','
+        }
+        if (filterByDate.value) {
+            searchParams.value += 'date>' + minDate.value + ',date<' + maxDate.value + ','
+        }
+        if (filterByMethod.value) {
+            searchParams.value += 'method:' + method.value + ','
+        }
+        if (filterByNote.value) {
+            searchParams.value += 'subjectId:' + noteId.value + ',subject:note,'
+        }
+        console.log(searchParams)
+        emits('search', searchParams.value, orderByDateDesc.value)
+    }
 </script>
 <template>
     <div class="w-full fixed mx-auto bg-transparent duration-300" :class="{
@@ -44,17 +68,19 @@
                 <span class="text-violet-400 font-serif tracking-wide">
                     Filter by: 
                 </span>
-                <li class="px-4" @click="searchByUsername()">
+                <li class="px-4">
                     <span class="w-2/3">
                         <input type="checkbox" v-model="filterByUsername" class="p-2 mx-2" />
                         user
                     </span>
-                    <input :class="{
+                    <input v-model="username"
+                    :class="{
                         'opacity-0': !filterByUsername,
                         'disabled': !filterByUsername,
+                        'enabled': filterByUsername,
                         'opacity-1': filterByUsername
-                        }"
-                        class="bg-gray-600 rounded-full border-b-2 w-2/3 border-violet-700 focus:outline-none px-2"/>
+                    }"
+                    class="bg-transparent rounded-full border-b-2 w-2/3 border-violet-700 focus:outline-none px-2"/>
                 </li>
                 <li class="px-4">
                     <span class="w-full">
@@ -66,18 +92,23 @@
                             'disabled': !filterByDate,
                             'opacity-1': filterByDate
                         }">
-                        <input type="date"
+                        <input type="date" v-model="minDate"
                         class="bg-gray-600 rounded-full border-b-2 w-1/3 border-violet-700 focus:outline-none px-2"/>
                         -
-                        <input type="date"
+                        <input type="date" v-model="maxDate"
                         class="bg-gray-600 rounded-full border-b-2 w-1/3 border-violet-700 focus:outline-none px-2"/>
                     </div>
                     
                 </li>
                 <li class="px-4 relative">
-                    <span class="w-2/3">
+                    <span class="flex mb-2">
                         <input type="checkbox" v-model="filterByMethod" class="p-2 mx-2" />
                         method
+                    </span>
+                    <span v-if="filterByMethod && !methodSelector && method !== null"
+                    class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 rounded-md border border-gray-700"
+                    @click="methodSelector = !methodSelector">
+                        {{ method }}
                     </span>
                     <div :class="{
                         'opacity-0': !filterByMethod,
@@ -85,17 +116,33 @@
                         'opacity-1': filterByMethod
                         }"
                         class="absolute">
-                        <ul class="overflow-hidden bg-gray-800 rounded-md">
-                            <li class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
+                        <ul v-if="(filterByMethod && method === null) || methodSelector" class="overflow-hidden bg-gray-800 rounded-md" @click="methodSelector = false">
+                            <li @click="method = 'GET'" 
+                            :class="{
+                                'bg-slate-900': method === 'GET'
+                            }" 
+                            class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
                                 GET
                             </li>
-                            <li class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
+                            <li @click="method = 'POST'" 
+                            :class="{
+                                'bg-slate-900': method === 'POST'
+                            }" 
+                            class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
                                 POST
                             </li>
-                            <li class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
+                            <li @click="method = 'PUT'" 
+                            :class="{
+                                'bg-slate-900': method === 'PUT'
+                            }" 
+                            class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
                                 PUT
                             </li>
-                            <li class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
+                            <li @click="method = 'DELETE'" 
+                            :class="{
+                                'bg-slate-900': method === 'DELETE'
+                            }" 
+                            class="p-2 hover:text-violet-400 duration-300 hover:bg-slate-900 border-b border-gray-700">
                                 DELETE
                             </li>
                         </ul>
@@ -103,14 +150,15 @@
                 </li>
                 <li class="px-4">
                     <span class="w-2/3">
-                        <input type="checkbox" class="p-2 mx-2" />
+                        <input type="checkbox" v-model="filterByNote" class="p-2 mx-2" />
                         note
                     </span>
                     <input :class="{
                         'opacity-0': !filterByNote,
                         'opacity-1': filterByNote
                     }"
-                    type="number" class="bg-gray-600 appearance-none rounded-full border-b-2 w-2/3 border-violet-700 focus:outline-none px-2"/>
+                    v-model="noteId"
+                    type="number" class="bg-transparent appearance-none rounded-full border-b-2 w-2/3 border-violet-700 focus:outline-none px-2"/>
                 </li>
             </ul>
 
@@ -125,7 +173,7 @@
                 </li>
             </ul>
 
-            <button class="w-1/12 p-3 bg-gray-800 rounded-full float-right focus:outline-none hover:text-violet-400 duration-300" @click="$emit('search', searchParams, orderByDateDesc)">
+            <button class="w-1/12 p-3 bg-gray-800 rounded-full float-right focus:outline-none hover:text-violet-400 duration-300" @click="search()">
                 <i class="fa-solid fa-magnifying-glass" />
             </button>
         </nav>

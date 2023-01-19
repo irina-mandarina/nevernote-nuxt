@@ -1,40 +1,49 @@
 <script setup>
     import { onBeforeMount, ref } from 'vue'
-    import { searchLogs } from '~~/js/requests'
+    import { getLogs, searchLogs } from '~~/js/requests'
     import { useUserStore } from '~~/store/UserStore'
 
     let response = ref(null)
     let logs = ref(null)
     onBeforeMount(async () => {
-        await searchHistory('', true)
+        await getHistory('', true)
     })
 
-    async function searchHistory(search, orderByDateDesc) {
-        if (search === null || search === undefined) {
-            search = ''
+    async function getHistory(search, orderByDateDesc) {
+        if (useUserStore().roles.includes('ADMIN')) {
+            if (search === null || search === undefined) {
+                search = ''
+            }
+            if (orderByDateDesc === null || orderByDateDesc === undefined) {
+                orderByDateDesc = true
+            }
+            try {
+                response.value = await searchLogs(search, orderByDateDesc)
+                logs.value = response.value.data
+            } catch (error) { 
+                toastr.error("Could not retrieve history")
+            }
         }
-        if (orderByDateDesc === null || orderByDateDesc === undefined) {
-            console.log(orderByDateDesc)
-            orderByDateDesc = true
-        }
-        try {
-            response.value = await searchLogs(search, orderByDateDesc)
-        } catch (error) { 
-            toastr.error("Could not retrieve history")
-        }
-        if (response.value.status === 200) {
-            logs.value = response.value.data
+        else {
+            try {
+                response.value = await getLogs() 
+                logs.value = response.value.data
+            }
+            catch (error) {
+                toastr.error("Could not retrieve history")
+            }
         }
     }
 </script>
 <template>
     <div>
         <NuxtLayout name="default">
-            <HistoryMenu @search="searchHistory(search, orderByDateDesc)" v-if="useUserStore().roles.includes('ADMIN')" />
-            <div class="py-12">
+            <HistoryMenu v-if="useUserStore().roles.includes('ADMIN')" @search="getHistory" />
+            <div v-if="logs === null" class="py-12">
+                No history is recorded.
             </div>
-            <div v-if="logs !== null" v-for="log in logs">
-                <Log :log="log"/>
+            <div class="py-20" v-if="logs !== null">
+                <Log v-for="log in logs" :log="log"/>
             </div>
         </NuxtLayout>
     </div>
