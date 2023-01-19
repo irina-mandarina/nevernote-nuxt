@@ -39,10 +39,10 @@
     <div>
         <NuxtLayout name="default">
             <HistoryMenu v-if="useUserStore().roles.includes('ADMIN')" @search="getHistory" />
-            <div v-if="logs === null" class="py-12">
+            <div v-if="logs === null || logs.length === 0" class="py-48 text-5xl text-center font-josefin-slab font-bold text-gray-300">
                 No history is recorded.
             </div>
-            <div class="py-20" v-if="logs !== null">
+            <div class="py-36" v-if="logs !== null">
                 <Log v-for="log in logs" :log="log"/>
             </div>
         </NuxtLayout>

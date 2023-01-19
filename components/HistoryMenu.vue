@@ -63,9 +63,9 @@
             'translate-y-0': showNav,
             '-translate-y-full': !showNav
         }">
-        <nav class="bg-gray-900 w-3/5 mx-auto p-2 flex rounded-b-lg relative text-center text-violet-500 justify-center">
-            <ul class="flex w-2/3 justify-evenly">
-                <span class="text-violet-400 font-serif tracking-wide">
+        <nav class="bg-gray-900 w-fit max-w-5/6 mx-auto p-4 flex rounded-b-lg relative text-center text-violet-500 justify-center">
+            <ul class="flex w-2/3">
+                <span class="text-violet-400 whitespace-nowrap font-serif tracking-wide">
                     Filter by: 
                 </span>
                 <li class="px-4">
