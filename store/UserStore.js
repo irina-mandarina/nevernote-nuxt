@@ -55,7 +55,7 @@ export const useUserStore = defineStore('userStore', {
       return status
     },
 
-
+// clean
     async logOut(username) {
       if (!username) {
         LSLogOut(username)
@@ -69,6 +69,14 @@ export const useUserStore = defineStore('userStore', {
         LSLogOut(username)
         LSSetToken("")
         this.logged = false
+        this.username = null,
+        this.name = null,
+        this.age = 0,
+        this.address = null,
+        this.bio = null,
+        this.logged = false,
+        this.server = ref(true),
+        this.roles = []
         navigateTo('/')
       }
     },
