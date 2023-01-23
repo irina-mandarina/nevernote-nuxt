@@ -18,6 +18,9 @@
     let currentScrollPosition = 0
 
     let searchParams = ref([])
+    let orderParams = ref([])
+    let pageSize = ref(10)
+    let pageNumber = ref(1)
 
     const emits = defineEmits([
         'search'
@@ -42,6 +45,7 @@
 
     function search() {
         searchParams.value = ''
+        orderParams.value = ''
         if (filterByUsername.value) {
             searchParams.value += 'username:' + username.value + ','
         }
@@ -54,8 +58,16 @@
         if (filterByNote.value) {
             searchParams.value += 'subjectId:' + noteId.value + ',subject:note,'
         }
+        if (orderByDateDesc.value) {
+            orderParams.value += 'timestamp:desc,'
+        }
+        else {
+            orderParams.value += 'timestamp:asc,'
+        }
         console.log(searchParams)
-        emits('search', searchParams.value, orderByDateDesc.value)
+        console.log(orderParams)
+        console.log(pageNumber.value)
+        emits('search', searchParams.value, orderParams.value, pageNumber.value, pageSize.value)
     }
 </script>
 <template>

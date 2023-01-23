@@ -1,7 +1,6 @@
 <script setup>
     import { onBeforeMount, ref } from 'vue'
-    import { getLogs, searchLogs } from '~~/js/requests'
-    import { useUserStore } from '~~/store/UserStore'
+    import { searchLogs } from '~~/js/requests'
 
     let response = ref(null)
     let logs = ref(null)
@@ -9,36 +8,31 @@
         await getHistory('', true)
     })
 
-    async function getHistory(search, orderByDateDesc) {
-        if (useUserStore().roles.includes('ADMIN')) {
-            if (search === null || search === undefined) {
-                search = ''
-            }
-            if (orderByDateDesc === null || orderByDateDesc === undefined) {
-                orderByDateDesc = true
-            }
-            try {
-                response.value = await searchLogs(search, orderByDateDesc)
-                logs.value = response.value.data
-            } catch (error) { 
-                toastr.error("Could not retrieve history")
-            }
+    async function getHistory(search, order, pageNumber, pageSize) {
+        if (search === null || search === undefined) {
+            search = ''
         }
-        else {
-            try {
-                response.value = await getLogs() 
-                logs.value = response.value.data
-            }
-            catch (error) {
-                toastr.error("Could not retrieve history")
-            }
+        if (order === null || order === undefined) {
+            order = ''
+        }
+        if (pageNumber === null || pageNumber === undefined) {
+            pageNumber = 1
+        }
+        if (pageSize === null || pageSize === undefined) {
+            pageSize = 10
+        }
+        try {
+            response.value = await searchLogs(search, order, pageNumber, pageSize)
+            logs.value = response.value.data
+        } catch (error) { 
+            toastr.error("Could not retrieve history")
         }
     }
 </script>
 <template>
     <div>
         <NuxtLayout name="default">
-            <HistoryMenu v-if="useUserStore().roles.includes('ADMIN')" @search="getHistory" />
+            <HistoryMenu @search="getHistory" />
             <div v-if="logs === null || logs.length === 0" class="py-48 text-5xl text-center font-josefin-slab font-bold text-gray-300">
                 No history is recorded.
             </div>

@@ -186,7 +186,7 @@ export async function getLogs() {
     return response
 }
 
-export async function searchLogs(search, orderByDateDesc) {
+export async function searchLogs(search, order, pageNumber, pageSize) {
     const response = await axios.get("http://localhost:5173/history/search",
         {
             headers: {
@@ -195,7 +195,9 @@ export async function searchLogs(search, orderByDateDesc) {
             },
             params: {
                 search,
-                orderByDateDesc
+                order,
+                pageNumber,
+                pageSize
             }
         }
     )
